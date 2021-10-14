@@ -12,7 +12,7 @@ namespace VadesContentMod.Items.Weapons
 		public override void SetStaticDefaults() 
 		{
 			DisplayName.SetDefault("Entropion Blade");
-			Tooltip.SetDefault("amogus(insert text epic text here if u wany)");
+			Tooltip.SetDefault("'The grandfather of all blades'");
 		}
 
 		public override void SetDefaults() 
