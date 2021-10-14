@@ -1,0 +1,6 @@
+displayName = Infinite Realities Mod
+author = DevaVade
+version = 0.1
+hideCode = true
+hideResources = true
+homepage = https://discord.gg/EcXUkASV5x
