@@ -1,9 +1,7 @@
 using Microsoft.Xna.Framework;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.Localization;
 
 namespace VadesContentMod.Items
 {
@@ -11,7 +9,7 @@ namespace VadesContentMod.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Godly energy");
+            DisplayName.SetDefault("Godly energy**");
             Tooltip.SetDefault("Grants immunity to every debuff");
         }
 
