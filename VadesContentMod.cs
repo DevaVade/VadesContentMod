@@ -4,7 +4,7 @@ namespace VadesContentMod
 {
 	public class VadesContentMod : Mod
 	{
-		internal static VadesContentMod Instance;
+		internal static modConfig modConfig;
 
 		internal bool ThoriumLoaded;
 		internal bool CalamityLoaded;
@@ -13,22 +13,10 @@ namespace VadesContentMod
 		internal bool FargoLoaded;
 		internal bool SoulsLoaded;
 
-		public override uint ExtraPlayerBuffSlots
-		{
-			get
-			{
-				return 300U;
-			}
-		}
+		public override uint ExtraPlayerBuffSlots => 300U;
 
 		public VadesContentMod()
 		{
-			base.Properties = new ModProperties
-			{
-				Autoload = true,
-				AutoloadGores = true,
-				AutoloadSounds = true
-			};
 		}
 
 		public override void PostSetupContent()
@@ -40,14 +28,5 @@ namespace VadesContentMod
 			FargoLoaded = ModLoader.GetMod("Fargowiltas") != null;
 			SoALoaded = ModLoader.GetMod("SacredTools") != null;
 		}
-
-		public override void Load()
-		{
-			Instance = this;
-		}
-
-		internal static modConfig modConfig;
-
-		internal bool calamityLoaded;
 	}
 }

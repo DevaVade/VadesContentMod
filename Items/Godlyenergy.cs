@@ -12,7 +12,7 @@ namespace VadesContentMod.Items
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Godly energy");
-            Tooltip.SetDefault("Grants immunity to every debuffs'");
+            Tooltip.SetDefault("Grants immunity to every debuff");
         }
 
         public override void SetDefaults()
@@ -25,10 +25,10 @@ namespace VadesContentMod.Items
             item.useAnimation = 17;
             item.useTime = 17;
             item.consumable = true;
-            item.buffType = mod.BuffType("AntiDebuff");
+            item.buffType = ModContent.BuffType<Buffs.AntiDebuff>();
             item.buffTime = 25200;
             item.UseSound = SoundID.Item3;
-            item.value = Item.sellPrice(0, 5);
+            item.value = Item.sellPrice(gold: 5);
         }
 
         public override Color? GetAlpha(Color lightColor)

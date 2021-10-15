@@ -190,12 +190,7 @@ namespace VadesContentMod.Projectiles
                 Main.gore[id].timeLeft = (int)(Main.gore[id].timeLeft * 0.7f);
             }
 
-            int num = mod.BuffType("GodCurse");
-            if (target.buffImmune[num])
-            {
-                target.buffImmune[num] = false;
-            }
-            target.AddBuff(num, 20, false);
+            target.AddBuff(ModContent.BuffType<Buffs.GodCurse>(), 60, false);
         }
 
         public override Color? GetAlpha(Color lightColor)

@@ -25,10 +25,10 @@ namespace VadesContentMod.Items
             item.useAnimation = 17;
             item.useTime = 17;
             item.consumable = true;
-            item.buffType = mod.BuffType("Sugoma");
+            item.buffType = ModContent.BuffType<Buffs.Sugoma>();
             item.buffTime = 25200;
             item.UseSound = SoundID.Item3;
-            item.value = Item.sellPrice(0, 5);
+            item.value = Item.sellPrice(gold: 5);
         }
     }
 }
