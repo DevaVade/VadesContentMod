@@ -4,7 +4,7 @@ namespace VadesContentMod
 {
 	public class VadesContentMod : Mod
 	{
-		internal static modConfig modConfig;
+		internal static VadConfig modConfig;
 
 		internal bool ThoriumLoaded;
 		internal bool CalamityLoaded;

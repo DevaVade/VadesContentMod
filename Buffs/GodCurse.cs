@@ -77,7 +77,7 @@ namespace VadesContentMod.Buffs
         {
             npc.defense = 0;
             npc.defDefense = 0;
-            npc.GetGlobalNPC<NPCs.VadNPC>().GodCurse = true;
+            npc.GetGlobalNPC<NPCs.VadGlobalNPC>().GodCurse = true;
 
             npc.ichor = true;
 			npc.onFire = true;

@@ -7,7 +7,7 @@ using Terraria.Localization;
 
 namespace VadesContentMod.Items
 {
-    public class suspotion : ModItem
+    public class SusPotion : ModItem
     {
         public override void SetStaticDefaults()
         {

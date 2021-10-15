@@ -14,7 +14,7 @@ using Terraria.Localization;
 
 namespace VadesContentMod.NPCs
 {
-	public partial class VadNPC : GlobalNPC
+	public partial class VadGlobalNPC : GlobalNPC
 	{
         public override bool InstancePerEntity
         {
@@ -37,8 +37,8 @@ namespace VadesContentMod.NPCs
 
         public override void SetDefaults(NPC npc)
         {
-		    npc.buffType = new int[ModContent.GetInstance<modConfig>().ExtraNpcBuff];
-	        npc.buffTime = new int[ModContent.GetInstance<modConfig>().ExtraNpcBuff];
+		    npc.buffType = new int[ModContent.GetInstance<VadConfig>().ExtraNpcBuff];
+	        npc.buffTime = new int[ModContent.GetInstance<VadConfig>().ExtraNpcBuff];
 	    }
 
         public override void DrawEffects(NPC npc, ref Color drawColor)

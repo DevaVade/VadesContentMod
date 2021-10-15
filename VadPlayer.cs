@@ -23,45 +23,46 @@ namespace VadesContentMod
     {
         public bool godlikePower;
         public bool godCurse;
-        public bool GodCurse2;
+        public bool godCurse2;
         public bool godGauntlet;
-        public bool OmniSet;
-        public bool MutantAttack;
-        public int MutantCD;
-        public int BlastCD;
-        public bool Evil;
-        public bool Xiao;
-        public bool Tiky;
-        public bool GODSet;
+        public bool omniSet;
+        public bool mutantAttack;
+        public int mutantCD;
+        public int blastCD;
+        public bool evil;
+        public bool xiao;
+        public bool tiky;
+        public bool godSet;
         public bool sus;
 
         public override void ResetEffects()
         {
             godlikePower = false;
             godCurse = false;
-            GodCurse2 = false;
+            godCurse2 = false;
             godGauntlet = false;
-            OmniSet = false;
-            MutantAttack = false;
-            Evil = false;
-            Xiao = false;
-            Tiky = false;
+            omniSet = false;
+            mutantAttack = false;
+            evil = false;
+            xiao = false;
+            tiky = false;
             sus = false;
-            GODSet = false;
+            godSet = false;
         }
+
         public override void UpdateDead()
         {
             godlikePower = false;
             godCurse = false;
-            GodCurse2 = false;
+            godCurse2 = false;
             godGauntlet = false;
-            OmniSet = false;
-            MutantAttack = false;
-            Evil = false;
-            Xiao = false;
-            Tiky = false;
+            omniSet = false;
+            mutantAttack = false;
+            evil = false;
+            xiao = false;
+            tiky = false;
             sus = false;
-            GODSet = false;
+            godSet = false;
         }
         public override void PostUpdateMiscEffects()
         {
@@ -88,7 +89,7 @@ namespace VadesContentMod
                 player.lifeRegenCount -= 6000000;
             }
 
-            if (GodCurse2)
+            if (godCurse2)
             {
                 if (player.lifeRegen > 0)
                     player.lifeRegen = 0;
@@ -102,7 +103,7 @@ namespace VadesContentMod
                 player.lifeRegenCount -= 60000;
             }
 
-            if (Evil)
+            if (evil)
             {
                 if (player.lifeRegen > 0)
                     player.lifeRegen = 0;
@@ -199,7 +200,7 @@ namespace VadesContentMod
         {
             if (player != Main.LocalPlayer) return;
 
-            for (int i = player.CountBuffs() - ModContent.GetInstance<modConfig>().ExtraPlayerBuff; i > 0; i--)
+            for (int i = player.CountBuffs() - ModContent.GetInstance<VadConfig>().ExtraPlayerBuff; i > 0; i--)
             {
                 int num = -1;
                 for (int j = 0; j < Player.MaxBuffs; j++)

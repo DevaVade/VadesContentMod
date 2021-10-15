@@ -7,7 +7,7 @@ using Terraria.Localization;
 
 namespace VadesContentMod.Items
 {
-    public class Godlyenergy : ModItem
+    public class GodlyEnergy : ModItem
     {
         public override void SetStaticDefaults()
         {
