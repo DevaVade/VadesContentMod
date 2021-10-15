@@ -22,10 +22,17 @@ namespace VadesContentMod.Projectiles
             projectile.melee = true;
             projectile.friendly = true;
             projectile.tileCollide = true;
+<<<<<<< HEAD
             projectile.penetrate = -1;
             projectile.usesIDStaticNPCImmunity = true;
             projectile.idStaticNPCHitCooldown = 10;
             projectile.scale = 2;
+=======
+            projectile.ownerHitCheck = true;
+            projectile.penetrate = -1;
+            projectile.usesIDStaticNPCImmunity = true;
+            projectile.idStaticNPCHitCooldown = 10;
+>>>>>>> 1b501f572bbb62c58309021bad4e0d65b2433dcd
         }
 
         public override void AI()
@@ -185,6 +192,7 @@ namespace VadesContentMod.Projectiles
                     Main.rand.Next(GoreID.ChimneySmoke1, GoreID.ChimneySmoke2 + 1));
                 Main.gore[id].timeLeft = (int)(Main.gore[id].timeLeft * 0.7f);
             }
+<<<<<<< HEAD
 
             int num = base.mod.BuffType("GodCurse");
             if (target.buffImmune[num])
@@ -192,6 +200,8 @@ namespace VadesContentMod.Projectiles
                 target.buffImmune[num] = false;
             }
             target.AddBuff(num, 20, false);
+=======
+>>>>>>> 1b501f572bbb62c58309021bad4e0d65b2433dcd
         }
 
         public override Color? GetAlpha(Color lightColor)
