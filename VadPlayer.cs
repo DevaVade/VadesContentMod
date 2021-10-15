@@ -1,21 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.DataStructures;
-using Terraria.GameInput;
-using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria.Graphics.Capture;
-using CalamityMod.CalPlayer;
-using CalamityMod.NPCs;
-using CalamityMod.World;
-using Terraria.Graphics.Shaders;
-using Terraria.UI;
-using VadesContentMod;
 
 namespace VadesContentMod
 {

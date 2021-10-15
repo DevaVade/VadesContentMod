@@ -7,11 +7,6 @@ namespace VadesContentMod
     {
         public override ConfigScope Mode => ConfigScope.ServerSide;
 
-        public override void OnLoaded()
-        {
-            VadesContentMod.modConfig = this;
-        }
-
         [Range(0, 1000)]
         [DefaultValue(50)]
         [Label("Extra npc buffs")]
