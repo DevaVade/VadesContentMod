@@ -22,17 +22,10 @@ namespace VadesContentMod.Projectiles
             projectile.melee = true;
             projectile.friendly = true;
             projectile.tileCollide = true;
-<<<<<<< HEAD
             projectile.penetrate = -1;
             projectile.usesIDStaticNPCImmunity = true;
             projectile.idStaticNPCHitCooldown = 10;
             projectile.scale = 2;
-=======
-            projectile.ownerHitCheck = true;
-            projectile.penetrate = -1;
-            projectile.usesIDStaticNPCImmunity = true;
-            projectile.idStaticNPCHitCooldown = 10;
->>>>>>> 1b501f572bbb62c58309021bad4e0d65b2433dcd
         }
 
         public override void AI()
@@ -85,7 +78,11 @@ namespace VadesContentMod.Projectiles
         private void CastLights(Player player)
         {
             DelegateMethods.v3_1 = new Vector3(3f, 0f, 0f);
-            Utils.PlotTileLine(player.Center, player.Center + projectile.velocity * 280f, 80f, DelegateMethods.CastLight);
+            Utils.PlotTileLine(
+                player.Center, 
+                player.Center + projectile.velocity * 280f * projectile.scale, 
+                80f * projectile.scale, 
+                DelegateMethods.CastLight);
         }
 
         private void SpawnDusts(Player player)
@@ -96,14 +93,14 @@ namespace VadesContentMod.Projectiles
             if (Main.rand.NextBool(10))
             {
                 int id = Dust.NewDust(player.Center + direction * 10f, 5, 5, DustID.LifeDrain, 0, 0, 0, default, 3f);
-                Main.dust[id].velocity = direction.RotatedBy(Main.rand.NextFloat(-spread, spread)) * 8f;
+                Main.dust[id].velocity = direction.RotatedBy(Main.rand.NextFloat(-spread, spread)) * 8f * projectile.scale;
                 Main.dust[id].fadeIn = 0f;
             }
 
             if (Main.rand.NextBool(8))
             {
                 int id = Dust.NewDust(player.Center + direction * 10f, 5, 5, DustID.TopazBolt, 0, 0, 0, default, 1.5f);
-                Main.dust[id].velocity = direction.RotatedBy(Main.rand.NextFloat(-spread * 1.5f * projectile.direction)) * 6f;
+                Main.dust[id].velocity = direction.RotatedBy(Main.rand.NextFloat(-spread * 1.5f * projectile.direction)) * 6f * projectile.scale;
                 Main.dust[id].noGravity = false;
             }
         }
@@ -163,8 +160,8 @@ namespace VadesContentMod.Projectiles
                 targetHitbox.Left(),
                 targetHitbox.Size(),
                 player.Center,
-                player.Center + projectile.velocity * 360f,
-                300f,
+                player.Center + projectile.velocity * 360f * projectile.scale,
+                300f * projectile.scale,
                 ref point);
         }
 
@@ -192,16 +189,13 @@ namespace VadesContentMod.Projectiles
                     Main.rand.Next(GoreID.ChimneySmoke1, GoreID.ChimneySmoke2 + 1));
                 Main.gore[id].timeLeft = (int)(Main.gore[id].timeLeft * 0.7f);
             }
-<<<<<<< HEAD
 
-            int num = base.mod.BuffType("GodCurse");
+            int num = mod.BuffType("GodCurse");
             if (target.buffImmune[num])
             {
                 target.buffImmune[num] = false;
             }
             target.AddBuff(num, 20, false);
-=======
->>>>>>> 1b501f572bbb62c58309021bad4e0d65b2433dcd
         }
 
         public override Color? GetAlpha(Color lightColor)
