@@ -31,6 +31,8 @@ namespace VadesContentMod.Items.Weapons
 			item.knockBack = 6;
 			item.value = Item.buyPrice(gold: 1);
 			item.rare = ItemRarityID.Purple;
+			item.shoot = ModContent.ProjectileType<Projectiles.EntropionBladeSlash>();
+			item.shootSpeed = 1;
 			item.UseSound = SoundID.Item1; 
 			item.autoReuse = true;
 		}
