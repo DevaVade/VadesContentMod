@@ -1,8 +1,8 @@
-using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
+using Terraria.DataStructures;
 using Terraria.ModLoader;
 
 namespace VadesContentMod.Items.Weapons
@@ -12,21 +12,27 @@ namespace VadesContentMod.Items.Weapons
 		public override void SetStaticDefaults() 
 		{
 			DisplayName.SetDefault("Entropion Blade");
-			Tooltip.SetDefault("amogus(insert text epic text here if u wany)");
+			Tooltip.SetDefault("'The grandfather of all blades'");
+
+			Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(5, 10));
 		}
 
 		public override void SetDefaults() 
 		{
 			item.damage = 55000;
 			item.melee = true;
-			item.width = 150;
-			item.height = 200;
+			item.width = 180;
+			item.height = 278;
 			item.useTime = 20;
 			item.useAnimation = 20;
-			item.useStyle = 1;
+			item.useStyle = ItemUseStyleID.HoldingOut;
+			item.noUseGraphic = true;
+			item.channel = true;
 			item.knockBack = 6;
-			item.value = 10000;
-			item.rare = 11;
+			item.value = Item.buyPrice(gold: 1);
+			item.rare = ItemRarityID.Purple;
+			item.shoot = ModContent.ProjectileType<Projectiles.EntropionBladeSlash>();
+			item.shootSpeed = 1;
 			item.UseSound = SoundID.Item1; 
 			item.autoReuse = true;
 		}
@@ -37,7 +43,8 @@ namespace VadesContentMod.Items.Weapons
 			{
 				if (tooltipLine.mod == "Terraria" && tooltipLine.Name == "ItemName")
 				{
-					tooltipLine.overrideColor = new Color?(new Color(Main.DiscoR, Main.DiscoG, Main.DiscoB));
+					tooltipLine.overrideColor = new Color(Main.DiscoR, Main.DiscoG, Main.DiscoB);
+					break;
 				}
 			}
 		}
