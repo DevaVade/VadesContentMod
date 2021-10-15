@@ -5,7 +5,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Localization;
 
-namespace VadesContenMod.Items
+namespace VadesContentMod.Items
 {
     public class suspotion : ModItem
     {
