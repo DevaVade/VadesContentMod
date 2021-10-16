@@ -1,11 +1,17 @@
+using VadesContentMod.Buffs;
 using Terraria;
+using Terraria.ID;
 using Terraria.DataStructures;
+using Terraria.GameInput;
 using Terraria.ModLoader;
 
 namespace VadesContentMod
 {
     public partial class VadPlayer : ModPlayer
     {
+        public bool destructorSet;
+
+        public bool oneShotCooldown;
         public bool oneShot;
         public bool godlikePower;
         public bool godCurse;
@@ -23,6 +29,8 @@ namespace VadesContentMod
 
         public override void ResetEffects()
         {
+            destructorSet = false;
+            oneShotCooldown = false;
             oneShot = false;
             godlikePower = false;
             godCurse = false;
@@ -138,7 +146,8 @@ namespace VadesContentMod
         {
             if (oneShot)
             {
-                target.life = -1;
+                target.life = 1;
+                target.StrikeNPC(1, 0f, 1);
             } else if (godGauntlet)
             {
                 target.AddBuff(mod.BuffType("GodCurse2"), 1000);
@@ -149,7 +158,8 @@ namespace VadesContentMod
         {
             if (oneShot)
             {
-                target.life = -1;
+                target.life = 1;
+                target.StrikeNPC(1, 0f, 1);
             } else if (godGauntlet)
             {
                 target.AddBuff(mod.BuffType("GodCurse2"), 1000);
@@ -198,6 +208,29 @@ namespace VadesContentMod
                 if (num == -1) return;
             
                 player.DelBuff(num);
+            }
+        }
+
+        public override void ProcessTriggers(TriggersSet triggersSet)
+        {
+            if (!oneShotCooldown && destructorSet && VadesContentMod.OneShothotKey.JustPressed)
+            {
+                oneShot = oneShotCooldown = true;
+                player.AddBuff(ModContent.BuffType<OneShot>(), 1900);
+                player.AddBuff(ModContent.BuffType<OneShotCooldown>(), 7200);
+
+                Main.PlaySound(SoundID.NPCDeath56);
+
+                for (int d = 0; d < 30; d++)
+                {
+                    int id = Dust.NewDust(player.Center, 5, 5, DustID.LifeDrain);
+                    Main.dust[id].velocity *= 2;
+                }
+
+                for (int d = 0; d < 10; d++)
+                {
+                    int id = Dust.NewDust(player.Center, 5, 5, DustID.TopazBolt);
+                }
             }
         }
     }

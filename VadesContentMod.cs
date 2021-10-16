@@ -4,7 +4,7 @@ namespace VadesContentMod
 {
 	public class VadesContentMod : Mod
 	{
-		internal static VadConfig modConfig;
+		public static ModHotKey OneShothotKey;
 
 		internal bool ThoriumLoaded;
 		internal bool CalamityLoaded;
@@ -15,11 +15,17 @@ namespace VadesContentMod
 
 		public override uint ExtraPlayerBuffSlots => 300U;
 
-		public VadesContentMod()
-		{
-		}
+        public override void Load()
+        {
+			OneShothotKey = RegisterHotKey("Destructor Armor One-Shot", "F");
+        }
 
-		public override void PostSetupContent()
+        public override void Unload()
+        {
+			OneShothotKey = null;
+        }
+
+        public override void PostSetupContent()
 		{
 			ThoriumLoaded = ModLoader.GetMod("ThoriumMod") != null;
 			CalamityLoaded = ModLoader.GetMod("CalamityMod") != null;

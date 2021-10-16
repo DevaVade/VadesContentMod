@@ -16,5 +16,11 @@ namespace VadesContentMod.Items.Armor
 
         public override bool IsArmorSet(Item head, Item body, Item legs) =>
             body.type == ModContent.ItemType<DestructorBody>() && legs.type == ModContent.ItemType<DestructorPants>();
+
+        public override void UpdateArmorSet(Player player)
+        {
+            player.GetModPlayer<VadPlayer>().destructorSet = true;
+            player.setBonus = "Press " + VadesContentMod.OneShothotKey.ToString() + " to instakill anything";
+        }
     }
 }
