@@ -229,7 +229,7 @@ namespace VadesContentMod
 
                 for (int d = 0; d < 10; d++)
                 {
-                    int id = Dust.NewDust(player.Center, 5, 5, DustID.TopazBolt);
+                    Dust.NewDust(player.Center, 5, 5, DustID.TopazBolt);
                 }
             }
         }

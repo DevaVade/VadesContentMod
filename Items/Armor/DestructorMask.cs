@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using System.Collections.Generic;
+using Terraria;
 using Terraria.ModLoader;
 
 namespace VadesContentMod.Items.Armor
@@ -20,7 +21,11 @@ namespace VadesContentMod.Items.Armor
         public override void UpdateArmorSet(Player player)
         {
             player.GetModPlayer<VadPlayer>().destructorSet = true;
-            player.setBonus = "Press " + VadesContentMod.OneShothotKey.ToString() + " to instakill anything";
+
+            List<string> hotkeys = VadesContentMod.OneShothotKey.GetAssignedKeys();
+            string hotkey = hotkeys.Count == 0 ? "[NONE]" : hotkeys[0];
+
+            player.setBonus = "Press " + hotkey + " to instakill anything. This effect has a 2-minute cooldown";
         }
     }
 }
