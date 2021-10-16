@@ -114,7 +114,7 @@ namespace VadesContentMod
         {
             if (godlikePower)
             {
-                player.statLife = base.player.statLifeMax2;
+                player.statLife = player.statLifeMax2;
                 if (player.statLifeMax < 100)
                 {
                     player.statLifeMax = 100;
@@ -130,15 +130,9 @@ namespace VadesContentMod
             }
         }
 
-        public override bool CanBeHitByNPC(NPC npc, ref int cooldownSlot)
-        {
-            return !godlikePower;
-        }
+        public override bool CanBeHitByNPC(NPC npc, ref int cooldownSlot) => !godlikePower;
 
-        public override bool CanBeHitByProjectile(Projectile proj)
-        {
-            return !godlikePower;
-        }
+        public override bool CanBeHitByProjectile(Projectile proj) => !godlikePower;
 
         public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
         {
