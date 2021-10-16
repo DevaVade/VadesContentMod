@@ -1,12 +1,12 @@
-using System;
-using System.Collections.Generic;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ModLoader;
 
 namespace VadesContentMod
 {
     public partial class VadPlayer : ModPlayer
     {
+        public bool oneShot;
         public bool godlikePower;
         public bool godCurse;
         public bool godCurse2;
@@ -23,6 +23,7 @@ namespace VadesContentMod
 
         public override void ResetEffects()
         {
+            oneShot = false;
             godlikePower = false;
             godCurse = false;
             godCurse2 = false;
@@ -36,20 +37,8 @@ namespace VadesContentMod
             godSet = false;
         }
 
-        public override void UpdateDead()
-        {
-            godlikePower = false;
-            godCurse = false;
-            godCurse2 = false;
-            godGauntlet = false;
-            omniSet = false;
-            mutantAttack = false;
-            evil = false;
-            xiao = false;
-            tiky = false;
-            sus = false;
-            godSet = false;
-        }
+        public override void UpdateDead() => ResetEffects();
+
         public override void PostUpdateMiscEffects()
         {
             if (godCurse)
@@ -59,6 +48,7 @@ namespace VadesContentMod
                 player.ghost = true;
             }
         }
+
         public override void UpdateBadLifeRegen()
         {
             if (godCurse)
@@ -152,7 +142,10 @@ namespace VadesContentMod
 
         public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
         {
-            if (godGauntlet)
+            if (oneShot)
+            {
+                target.life = -1;
+            } else if (godGauntlet)
             {
                 target.AddBuff(mod.BuffType("GodCurse2"), 1000);
             }
@@ -160,7 +153,10 @@ namespace VadesContentMod
 
         public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
         {
-            if (godGauntlet)
+            if (oneShot)
+            {
+                target.life = -1;
+            } else if (godGauntlet)
             {
                 target.AddBuff(mod.BuffType("GodCurse2"), 1000);
             }
@@ -168,7 +164,11 @@ namespace VadesContentMod
 
         public override void OnHitPvp(Item item, Player target, int damage, bool crit)
         {
-            if (godGauntlet)
+            if (oneShot)
+            {
+                int hitDirection = player.position.X > target.position.X ? 1 : -1;
+                target.KillMe(PlayerDeathReason.ByPlayer(player.whoAmI), 999999, hitDirection, true);
+            } else if (godGauntlet)
             {
                 target.AddBuff(mod.BuffType("GodCurse2"), 2);
             }
@@ -176,7 +176,11 @@ namespace VadesContentMod
 
         public override void OnHitPvpWithProj(Projectile proj, Player target, int damage, bool crit)
         {
-            if (godGauntlet)
+            if (oneShot)
+            {
+                int hitDirection = proj.position.X > target.position.X ? 1 : -1;
+                target.KillMe(PlayerDeathReason.ByPlayer(player.whoAmI), 999999, hitDirection, true);
+            } else if (godGauntlet)
             {
                 target.AddBuff(mod.BuffType("GodCurse2"), 2);
             }
