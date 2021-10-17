@@ -4,7 +4,7 @@ namespace VadesContentMod
 {
 	public class VadesContentMod : Mod
 	{
-		internal static VadesContentMod Instance;
+		public static ModHotKey OneShothotKey;
 
 		internal bool ThoriumLoaded;
 		internal bool CalamityLoaded;
@@ -13,25 +13,19 @@ namespace VadesContentMod
 		internal bool FargoLoaded;
 		internal bool SoulsLoaded;
 
-		public override uint ExtraPlayerBuffSlots
-		{
-			get
-			{
-				return 300U;
-			}
-		}
+		public override uint ExtraPlayerBuffSlots => 300U;
 
-		public VadesContentMod()
-		{
-			base.Properties = new ModProperties
-			{
-				Autoload = true,
-				AutoloadGores = true,
-				AutoloadSounds = true
-			};
-		}
+        public override void Load()
+        {
+			OneShothotKey = RegisterHotKey("Destructor Armor One-Shot", "F");
+        }
 
-		public override void PostSetupContent()
+        public override void Unload()
+        {
+			OneShothotKey = null;
+        }
+
+        public override void PostSetupContent()
 		{
 			ThoriumLoaded = ModLoader.GetMod("ThoriumMod") != null;
 			CalamityLoaded = ModLoader.GetMod("CalamityMod") != null;
@@ -40,14 +34,5 @@ namespace VadesContentMod
 			FargoLoaded = ModLoader.GetMod("Fargowiltas") != null;
 			SoALoaded = ModLoader.GetMod("SacredTools") != null;
 		}
-
-		public override void Load()
-		{
-			Instance = this;
-		}
-
-		internal static modConfig modConfig;
-
-		internal bool calamityLoaded;
 	}
 }

@@ -1,19 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.GameInput;
-using Terraria.Graphics.Effects;
-using Terraria.Graphics.Shaders;
-using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
-using Terraria.Localization;
-using Terraria.Graphics.Capture;
-using System.IO;
 
 namespace VadesContentMod.Buffs
 {
@@ -26,13 +13,13 @@ namespace VadesContentMod.Buffs
             Main.buffNoTimeDisplay[Type] = true;
             Main.buffNoSave[Type] = true;
             Main.pvpBuff[Type] = true;
-            this.longerExpertDebuff = true;
-			Main.persistentBuff[base.Type] = true;
+            longerExpertDebuff = true;
+			Main.persistentBuff[Type] = true;
         }
 
         public override void Update(Player player, ref int buffIndex)
         {
-            player.GetModPlayer<VadPlayer>().GodCurse = true;
+            player.GetModPlayer<VadPlayer>().godCurse = true;
 
             player.endurance = 0f;
             player.meleeDamage = 0.01f;
@@ -78,22 +65,19 @@ namespace VadesContentMod.Buffs
                 player.beetleCounter = 0;
             }
 
-			for (int i = 0; i < BuffLoader.BuffCount; i++)
-	        {
-		        if (Main.debuff[i])
-	            {
-			           player.buffImmune[i] = false;
-	            }
-	        }
+            for (int i = 0; i < BuffLoader.BuffCount; i++)
+            {
+                if (Main.debuff[i]) player.buffImmune[i] = false;
+            }
 
-			player.KillMe(PlayerDeathReason.ByOther(player.Male ? 14 : 15), 1.0, 0, false);
+            player.KillMe(PlayerDeathReason.ByOther(player.Male ? 14 : 15), 1.0, 0, false);
         }
 
         public override void Update(NPC npc, ref int buffIndex)
         {
             npc.defense = 0;
             npc.defDefense = 0;
-            npc.GetGlobalNPC<NPCs.VadNPC>().GodCurse = true;
+            npc.GetGlobalNPC<NPCs.VadGlobalNPC>().godCurse = true;
 
             npc.ichor = true;
 			npc.onFire = true;
@@ -106,11 +90,8 @@ namespace VadesContentMod.Buffs
 
 			for (int i = 0; i < BuffLoader.BuffCount; i++)
 	        {
-			     if (Main.debuff[i])
-	             {
-		            npc.buffImmune[i] = false;
-	             } 
+			     if (Main.debuff[i]) npc.buffImmune[i] = false;
 		    }
-        } 
+        }
     }
 }

@@ -1,40 +1,31 @@
 ﻿using Terraria;
-using Terraria.Localization;
 using Terraria.ModLoader;
-using Terraria.ID;
-using System;
-using Microsoft.Xna.Framework;
-using CalamityMod;
-using CalamityMod.CalPlayer;
-using FargowiltasSouls;
 
 namespace VadesContentMod.Buffs
 {
     public class AntiDebuff : ModBuff
     { 
-        private readonly Mod calamity = ModLoader.GetMod("CalamityMod");
-
         public override void SetDefaults()
         {
             DisplayName.SetDefault("Peak Evolution");
-            Description.SetDefault("Immune to every debuffs");
+            Description.SetDefault("Immune to every debuff");
+
             Main.buffNoTimeDisplay[Type] = true;
             Main.buffNoSave[Type] = false;
-            Main.persistentBuff[base.Type] = true;
+            Main.persistentBuff[Type] = true;
         }
 
         public override void Update(Player player, ref int buffIndex)
         {
+            Mod calamity = ModLoader.GetMod("CalamityMod");
+            int rage = calamity != null ? calamity.BuffType("RageMode") : -1;
+            int adrenaline = calamity != null ? calamity.BuffType("AdrenalineMode") : -1;
+
             for (int i = 0; i < BuffLoader.BuffCount; i++)
-	        {
-		        if (Main.debuff[i])
+            {
+                if (Main.debuff[i] && i != rage && i != adrenaline)
 	            {
-			           player.buffImmune[i] = true;
-			           if (this.calamity != null)
-			           {
-				                player.buffImmune[this.calamity.BuffType("RageMode")] = false;
-				                player.buffImmune[this.calamity.BuffType("AdrenalineMode")] = false;
-			           }
+                    player.buffImmune[i] = true;
 	            }
 	        }
         }

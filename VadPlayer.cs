@@ -1,223 +1,260 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Xna.Framework;
+using VadesContentMod.Buffs;
 using Terraria;
+using Terraria.ID;
 using Terraria.DataStructures;
 using Terraria.GameInput;
-using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria.Graphics.Capture;
-using CalamityMod.CalPlayer;
-using CalamityMod.NPCs;
-using CalamityMod.World;
-using Terraria.Graphics.Shaders;
-using Terraria.UI;
-using VadesContentMod;
 
 namespace VadesContentMod
 {
-	public partial class VadPlayer : ModPlayer
-	{
-	    public bool GodlikePower; 
-        public bool GodCurse; 
-		public bool GodCurse2;
-		public bool GodGauntlet;
-		public bool OmniSet; 
-		public bool MutantAttack; 
-		public int MutantCD;
-		public int BlastCD;
-		public bool Evil;
-		public bool Xiao;
-		public bool Tiky;
-        public bool GODSet;
-        public bool Sus;
-	   
-	    public override void ResetEffects()
-	    { 
-	        GodlikePower = false;
-            GodCurse = false;
-			GodCurse2 = false;
-			GodGauntlet = false;
-			OmniSet = false;
-			MutantAttack = false;
-			Evil = false;
-		    Xiao = false;
-			Tiky = false;
-            Sus = false;
-            GODSet = false;
-	    }
-	    public override void UpdateDead()
+    public partial class VadPlayer : ModPlayer
+    {
+        public bool destructorSet;
+
+        public bool oneShotCooldown;
+        public bool oneShot;
+        public bool godlikePower;
+        public bool godCurse;
+        public bool godCurse2;
+        public bool godGauntlet;
+        public bool omniSet;
+        public bool mutantAttack;
+        public int mutantCD;
+        public int blastCD;
+        public bool evil;
+        public bool xiao;
+        public bool tiky;
+        public bool godSet;
+        public bool sus;
+
+        public override void ResetEffects()
         {
-		    GodlikePower = false;
-            GodCurse = false;
-			GodCurse2 = false;
-			GodGauntlet = false;
-			OmniSet = false;
-			MutantAttack = false;
-			Evil = false;
-			Xiao = false;
-			Tiky = false;
-			Sus = false;
-            GODSet = false;
-	    }
+            destructorSet = false;
+            oneShotCooldown = false;
+            oneShot = false;
+            godlikePower = false;
+            godCurse = false;
+            godCurse2 = false;
+            godGauntlet = false;
+            omniSet = false;
+            mutantAttack = false;
+            evil = false;
+            xiao = false;
+            tiky = false;
+            sus = false;
+            godSet = false;
+        }
+
+        public override void UpdateDead() => ResetEffects();
+
         public override void PostUpdateMiscEffects()
         {
-             if (GodCurse)
-             {
+            if (godCurse)
+            {
                 player.statDefense = 0;
                 player.endurance = 0;
-				player.ghost = true;
-             }
+                player.ghost = true;
+            }
         }
+
         public override void UpdateBadLifeRegen()
         {
-              if (GodCurse)
-              {
-                 if (player.lifeRegen > 0)
-                     player.lifeRegen = 0;
-                 player.lifeRegen -= 1700;
+            if (godCurse)
+            {
+                if (player.lifeRegen > 0)
+                    player.lifeRegen = 0;
+                player.lifeRegen -= 1700;
 
-                 player.lifeRegenTime = 0;
+                player.lifeRegenTime = 0;
 
-                 if (player.lifeRegenCount > 0)
+                if (player.lifeRegenCount > 0)
                     player.lifeRegenCount = 0;
 
-                 player.lifeRegenCount -= 6000000;
-              }
+                player.lifeRegenCount -= 6000000;
+            }
 
-			  if (GodCurse2)
-              {
-                 if (player.lifeRegen > 0)
-                     player.lifeRegen = 0;
-                 player.lifeRegen -= 1700;
+            if (godCurse2)
+            {
+                if (player.lifeRegen > 0)
+                    player.lifeRegen = 0;
+                player.lifeRegen -= 1700;
 
-                 player.lifeRegenTime = 0;
+                player.lifeRegenTime = 0;
 
-                 if (player.lifeRegenCount > 0)
+                if (player.lifeRegenCount > 0)
                     player.lifeRegenCount = 0;
 
-                 player.lifeRegenCount -= 60000;
-              }
+                player.lifeRegenCount -= 60000;
+            }
 
-			  if (Evil)
-              {
-                 if (player.lifeRegen > 0)
-                     player.lifeRegen = 0;
+            if (evil)
+            {
+                if (player.lifeRegen > 0)
+                    player.lifeRegen = 0;
 
-                 player.lifeRegenTime = 0;
+                player.lifeRegenTime = 0;
 
-                 if (player.lifeRegenCount > 0)
+                if (player.lifeRegenCount > 0)
                     player.lifeRegenCount = 0;
 
-                 player.lifeRegenCount -= 4;
-              }
+                player.lifeRegenCount -= 4;
+            }
 
-			  if (this.GodlikePower)
-	          {
-				  if (ModLoader.GetMod("CalamityMod") != null)
-				  {
-				       CalamityPlayer calamityPlayer = (CalamityPlayer)base.player.GetModPlayer(ModLoader.GetMod("CalamityMod"), "CalamityPlayer");
-		               if (base.player.lifeRegen > 20)
-		               {
-			               int num = base.player.lifeRegen - 20;
-			               base.player.lifeRegen = 20 + num * 2;
-		               }
-		               if (base.player.endurance > 0.3f)
-		               {
-			               float num2 = base.player.endurance - 0.3f;
-			               base.player.endurance = 0.3f + num2 * 4f;
-		               }
-	              }
-			  }
+            if (this.godlikePower)
+            {
+                if (ModLoader.GetMod("CalamityMod") != null)
+                {
+                    if (player.lifeRegen > 20)
+                    {
+                        int num = player.lifeRegen - 20;
+                        player.lifeRegen = 20 + num * 2;
+                    }
+                    if (player.endurance > 0.3f)
+                    {
+                        float num2 = player.endurance - 0.3f;
+                        player.endurance = 0.3f + num2 * 4f;
+                    }
+                }
+            }
         }
 
         public override void PreUpdate()
-	    {
-              if (GodlikePower)
-	          {  
-                   base.player.statLife = base.player.statLifeMax2;
-		           if (base.player.statLifeMax < 100)
-		           {
-		           base.player.statLifeMax = 100;
-		           }
-		           if (base.player.statLifeMax2 < 100)
-		           {
-		           base.player.statLifeMax2 = 100;
-		           }
+        {
+            if (godlikePower)
+            {
+                player.statLife = player.statLifeMax2;
+                if (player.statLifeMax < 100)
+                {
+                    player.statLifeMax = 100;
+                }
+                if (player.statLifeMax2 < 100)
+                {
+                    player.statLifeMax2 = 100;
+                }
 
-				   base.player.statLife = base.player.statLifeMax2;
-				   base.player.ghost = false;
-				   base.player.dead = false;
-              }
+                player.statLife = player.statLifeMax2;
+                player.ghost = false;
+                player.dead = false;
+            }
         }
 
-        public override bool CanBeHitByNPC(NPC npc, ref int cooldownSlot)
+        public override bool CanBeHitByNPC(NPC npc, ref int cooldownSlot) => !godlikePower;
+
+        public override bool CanBeHitByProjectile(Projectile proj) => !godlikePower;
+
+        public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
         {
-               return !this.GodlikePower;
+            if (oneShot)
+            {
+                target.life = 1;
+                target.StrikeNPC(1, 0f, 1);
+            } else if (godGauntlet)
+            {
+                target.AddBuff(mod.BuffType("GodCurse2"), 1000);
+            }
         }
 
-        public override bool CanBeHitByProjectile(Projectile proj)
+        public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
         {
-               return !this.GodlikePower;
+            if (oneShot)
+            {
+                target.life = 1;
+                target.StrikeNPC(1, 0f, 1);
+            } else if (godGauntlet)
+            {
+                target.AddBuff(mod.BuffType("GodCurse2"), 1000);
+            }
         }
 
-		public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
+        public override void OnHitPvp(Item item, Player target, int damage, bool crit)
         {
-		       if (GodGauntlet)
-			   {
-			        target.AddBuff(mod.BuffType("GodCurse2"), 1000);
-			   }
-		}
+            if (oneShot)
+            {
+                int hitDirection = player.position.X > target.position.X ? 1 : -1;
+                target.KillMe(PlayerDeathReason.ByPlayer(player.whoAmI), 999999, hitDirection, true);
+            } else if (godGauntlet)
+            {
+                target.AddBuff(mod.BuffType("GodCurse2"), 2);
+            }
+        }
 
-		public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
+        public override void OnHitPvpWithProj(Projectile proj, Player target, int damage, bool crit)
         {
-		       if (GodGauntlet)
-			   {
-			        target.AddBuff(mod.BuffType("GodCurse2"), 1000);
-			   }
-		}
-
-		public override void OnHitPvp(Item item, Player target, int damage, bool crit)
-		{
-		       if (GodGauntlet)
-			   {
-			        target.AddBuff(mod.BuffType("GodCurse2"), 2);
-			   }
-		}
-
-		public override void OnHitPvpWithProj(Projectile proj, Player target, int damage, bool crit)
-		{
-		       if (GodGauntlet)
-			   {
-			        target.AddBuff(mod.BuffType("GodCurse2"), 2);
-			   }
-		}
+            if (oneShot)
+            {
+                int hitDirection = proj.position.X > target.position.X ? 1 : -1;
+                target.KillMe(PlayerDeathReason.ByPlayer(player.whoAmI), 999999, hitDirection, true);
+            } else if (godGauntlet)
+            {
+                target.AddBuff(mod.BuffType("GodCurse2"), 2);
+            }
+        }
 
         public override void PreUpdateBuffs()
-	    {
-		    base.PreUpdateBuffs();
-		    if (base.player == Main.LocalPlayer)
-		    {
-			    for (int i = base.player.CountBuffs() - ModContent.GetInstance<modConfig>().ExtraPlayerBuff; i > 0; i--)
-			    {
-				    int num = -1;
-				    for (int j = 0; j < Player.MaxBuffs; j++)
-				    {
-					    if (!Main.debuff[base.player.buffType[j]] && base.player.buffTime[j] > 0)
-					    {
-						    num = j;
-					    }
-				    }
-				    if (num == -1)
-				    {
-					    return;
-				    }
-				    base.player.DelBuff(num);
-			    }
-		    }
-	    }
+        {
+            if (player != Main.LocalPlayer) return;
+
+            for (int i = player.CountBuffs() - ModContent.GetInstance<VadConfig>().ExtraPlayerBuff; i > 0; i--)
+            {
+                int num = -1;
+                for (int j = 0; j < Player.MaxBuffs; j++)
+                {
+                    if (!Main.debuff[player.buffType[j]] && player.buffTime[j] > 0)
+                    {
+                        num = j;
+                    }
+                }
+
+                if (num == -1) return;
+            
+                player.DelBuff(num);
+            }
+        }
+
+        public override void ProcessTriggers(TriggersSet triggersSet)
+        {
+            if (!oneShotCooldown && destructorSet && VadesContentMod.OneShothotKey.JustPressed)
+            {
+                oneShot = oneShotCooldown = true;
+                player.AddBuff(ModContent.BuffType<OneShot>(), 1900);
+                player.AddBuff(ModContent.BuffType<OneShotCooldown>(), 7200);
+
+                Main.PlaySound(SoundID.NPCDeath56);
+
+                for (int d = 0; d < 30; d++)
+                {
+                    int id = Dust.NewDust(player.Center, 5, 5, DustID.LifeDrain);
+                    Main.dust[id].velocity *= 2;
+                }
+
+                for (int d = 0; d < 10; d++)
+                {
+                    Dust.NewDust(player.Center, 5, 5, DustID.TopazBolt);
+                }
+            }
+        }
+
+        public void WingStats()
+        {
+            player.wingTimeMax = 999999;
+            player.wingTime = player.wingTimeMax;
+            player.ignoreWater = true;
+        }
+
+        public void WingStats2()
+        {
+            player.wingTimeMax = 999999;
+            player.wingTime = player.wingTimeMax;
+            player.ignoreWater = true;
+
+            if (player.controlDown && player.controlJump && !player.mount.Active)
+            {
+                player.position.Y -= player.velocity.Y;
+                if (player.velocity.Y > 0.1f)
+                    player.velocity.Y = 0.1f;
+                else if (player.velocity.Y < -0.1f)
+                    player.velocity.Y = -0.1f;
+            }
+        }
     }
 }
