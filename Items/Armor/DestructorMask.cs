@@ -7,12 +7,42 @@ namespace VadesContentMod.Items.Armor
     [AutoloadEquip(EquipType.Head)]
     public class DestructorMask : ModItem
     {
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Helm Of Omniscience");
+            Tooltip.SetDefault("90% increased damage and 50% increased critical strike chance, Increases max number of minions and sentries by 400.\n90% reduced mana usage, 25% chance not to consume ammo, also increases armor penetration to 1300.");
+            //add edgy and colored text yes pls
+        }
+
         public override void SetDefaults()
         {
             item.width = 32;
             item.height = 26;
-            item.value = Item.sellPrice(gold: 5);
+            item.value = Item.sellPrice(gold: 69);
             item.defense = 50000;
+            item.rare = 11;
+            item.expert = true;
+        }
+
+        public override void UpdateEquip(Player player)
+        {
+            const float damageUp = 0.9f;
+            const int critUp = 50;
+            player.meleeDamage += damageUp;
+            player.rangedDamage += damageUp;
+            player.magicDamage += damageUp;
+            player.minionDamage += damageUp;
+            player.meleeCrit += critUp;
+            player.rangedCrit += critUp;
+            player.magicCrit += critUp;
+
+            player.maxMinions += 400;
+            player.maxTurrets += 400;
+
+            player.manaCost -= 0.90f;
+            player.ammoCost75 = true;
+
+            player.armorPenetration += 1300;
         }
 
         public override bool IsArmorSet(Item head, Item body, Item legs) =>
@@ -26,6 +56,61 @@ namespace VadesContentMod.Items.Armor
             string hotkey = hotkeys.Count == 0 ? "[NONE]" : hotkeys[0];
 
             player.setBonus = "Press " + hotkey + " to instakill anything. This effect has a 2-minute cooldown";
+
+            player.allDamage += 22.2f;
+            const int critUp = 100;
+            player.meleeCrit += critUp;
+            player.rangedCrit += critUp;
+            player.magicCrit += critUp;
+            player.allDamage += 12f;
+            player.thorns = 100f;
+
+            player.armorPenetration += 15900;
+
+            player.meleeSpeed -= .9f;
+
+            player.longInvince = true;
+            player.endurance += 500f;
+            player.lavaImmune = true;
+            player.manaFlower = true;
+            player.manaMagnet = true;
+            player.magicCuffs = true;
+            player.ignoreWater = true;
+            player.pStone = true;
+            player.findTreasure = true;
+            player.noKnockback = true;
+
+            player.lavaImmune = true;
+            player.noFallDmg = true;
+            //you get extra bonus when you load other mods cus hahahahaha xdddddd(remove if u want but i prefer it being here)
+            if (ModLoader.GetMod("CalamityMod") != null)
+            {
+                ModLoader.GetMod("CalamityMod").GetItem("OmegaBlueHelmet").UpdateArmorSet(player);
+                ModLoader.GetMod("CalamityMod").GetItem("DemonshadeHelm").UpdateArmorSet(player);
+                ModLoader.GetMod("CalamityMod").GetItem("DemonshadeBreastplate").UpdateArmorSet(player);
+                ModLoader.GetMod("CalamityMod").GetItem("AuricTeslaBodyArmor").UpdateArmorSet(player);
+                ModLoader.GetMod("CalamityMod").GetItem("DaedalusHelm").UpdateArmorSet(player);
+                ModLoader.GetMod("CalamityMod").GetItem("DaedalusHat").UpdateArmorSet(player);
+                ModLoader.GetMod("CalamityMod").GetItem("DaedalusHelmet").UpdateArmorSet(player);
+                ModLoader.GetMod("CalamityMod").GetItem("DaedalusVisor").UpdateArmorSet(player);
+                ModLoader.GetMod("CalamityMod").GetItem("XerocMask").UpdateArmorSet(player);
+                ModLoader.GetMod("CalamityMod").GetItem("GodSlayerChestplate").UpdateArmorSet(player);
+                ModLoader.GetMod("CalamityMod").GetItem("GodSlayerMask").UpdateArmorSet(player);
+                ModLoader.GetMod("CalamityMod").GetItem("GodSlayerVisage").UpdateArmorSet(player);
+                ModLoader.GetMod("CalamityMod").GetItem("GodSlayerHelm").UpdateArmorSet(player);
+                ModLoader.GetMod("CalamityMod").GetItem("GodSlayerHornedHelm").UpdateArmorSet(player);
+                ModLoader.GetMod("CalamityMod").GetItem("SilvaHelm").UpdateArmorSet(player);
+                ModLoader.GetMod("CalamityMod").GetItem("SilvaHelmet").UpdateArmorSet(player);
+                ModLoader.GetMod("CalamityMod").GetItem("SilvaHornedHelm").UpdateArmorSet(player);
+                ModLoader.GetMod("CalamityMod").GetItem("SilvaMask").UpdateArmorSet(player);
+                ModLoader.GetMod("CalamityMod").GetItem("SilvaMaskedCap").UpdateArmorSet(player);
+            }
+            if (ModLoader.GetMod("FargowiltasSouls") != null)
+            {
+                ModLoader.GetMod("FargowiltasSouls").GetItem("StyxCrown").UpdateArmorSet(player);
+                ModLoader.GetMod("FargowiltasSouls").GetItem("MutantMask").UpdateArmorSet(player);
+                ModLoader.GetMod("FargowiltasSouls").GetItem("GaiaHelmet").UpdateArmorSet(player);
+            }
         }
     }
 }

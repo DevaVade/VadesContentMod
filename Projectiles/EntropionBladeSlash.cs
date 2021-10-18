@@ -190,7 +190,12 @@ namespace VadesContentMod.Projectiles
                 Main.gore[id].timeLeft = (int)(Main.gore[id].timeLeft * 0.7f);
             }
 
-            target.AddBuff(ModContent.BuffType<Buffs.GodCurse>(), 60, false);
+            int num = base.mod.BuffType("GodCurse");
+            if (target.buffImmune[num])
+            {
+                target.buffImmune[num] = false;
+            }
+            target.AddBuff(num, 2, false); // re-added this so that it can bypass the enemies with debuff immunities like the eidolon wyrm
         }
 
         public override Color? GetAlpha(Color lightColor)

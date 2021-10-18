@@ -9,36 +9,44 @@ namespace VadesContentMod.Items.Accessories
     {
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("This is a modded wing.");
+			DisplayName.SetDefault("Celestial Flight");
+			Tooltip.SetDefault("Its transcendent owner has travelled countless universes and dimensions with this.");
 		}
 
 		public override void SetDefaults()
 		{
-			item.width = 22;
+			item.width = 20;
 			item.height = 20;
-			item.value = Item.sellPrice(gold: 5);
-			item.rare = ItemRarityID.Purple;
 			item.accessory = true;
-		}
-		public override void UpdateAccessory(Player player, bool hideVisual)
-		{
-			player.wingTimeMax = 180;
-		}
-
-		public override void VerticalWingSpeeds(Player player, ref float ascentWhenFalling, ref float ascentWhenRising,
-			ref float maxCanAscendMultiplier, ref float maxAscentMultiplier, ref float constantAscend)
-		{
-			ascentWhenFalling = 0.85f;
-			ascentWhenRising = 0.15f;
-			maxCanAscendMultiplier = 1f;
-			maxAscentMultiplier = 3f;
-			constantAscend = 0.135f;
+			item.value = 1000000;
+			item.rare = ItemRarityID.Purple;
+			ItemID.Sets.ItemNoGravity[item.type] = true;
+			item.expert = true;
 		}
 
-		public override void HorizontalWingSpeeds(Player player, ref float speed, ref float acceleration)
-		{
-			speed = 9f;
-			acceleration *= 2.5f;
-		}
-	}
+        public override void UpdateAccessory(Player player, bool hideVisual)
+        {
+            VadPlayer VadPlayer = player.GetModPlayer<VadPlayer>();
+            VadPlayer.WingStats2();
+            player.runSlowdown = 2;
+            player.moveSpeed += 0.5f;
+        }
+
+        public override void VerticalWingSpeeds(Player player, ref float ascentWhenFalling, ref float ascentWhenRising,
+            ref float maxCanAscendMultiplier, ref float maxAscentMultiplier, ref float constantAscend)
+        {
+            player.wingsLogic = 22;
+            ascentWhenFalling = 2f;
+            ascentWhenRising = 0.55f;
+            maxCanAscendMultiplier = 3f;
+            maxAscentMultiplier = 5f;
+            constantAscend = 0.160f;
+        }
+
+        public override void HorizontalWingSpeeds(Player player, ref float speed, ref float acceleration)
+        {
+            speed = 23f;
+            acceleration *= 7f;
+        }
+    }
 }
