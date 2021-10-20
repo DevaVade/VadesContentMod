@@ -43,6 +43,10 @@ namespace VadesContentMod.Items.Armor
             player.ammoCost75 = true;
 
             player.armorPenetration += 1300;
+
+            player.wingTimeMax = 999999;
+            player.wingTime = player.wingTimeMax;
+            player.ignoreWater = true;
         }
 
         public override bool IsArmorSet(Item head, Item body, Item legs) =>

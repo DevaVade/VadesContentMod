@@ -239,20 +239,9 @@ namespace VadesContentMod
             }
         }
 
-        public void WingStats()
-        {
-            player.wingTimeMax = 999999;
-            player.wingTime = player.wingTimeMax;
-            player.ignoreWater = true;
-        }
-
         public void WingStats2()
         {
-            player.wingTimeMax = 999999;
-            player.wingTime = player.wingTimeMax;
-            player.ignoreWater = true;
-
-            if (player.controlDown && player.controlJump && !player.mount.Active)
+            if (destructorSet && player.controlDown && player.controlJump && !player.mount.Active)
             {
                 player.position.Y -= player.velocity.Y;
                 if (player.velocity.Y > 0.1f)
