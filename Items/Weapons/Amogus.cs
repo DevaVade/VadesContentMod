@@ -20,8 +20,9 @@ namespace VadesContentMod.Items.Weapons
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.rare = ItemRarityID.Purple;
             item.value = Item.sellPrice(gold: 10);
-            item.UseSound = mod.GetLegacySoundSlot(SoundType.Item, "Sounds/Items/Amogus");
+            item.UseSound = mod.GetLegacySoundSlot(SoundType.Item, "Sounds/Item/Amogus");
             item.noMelee = true;
+            item.autoReuse = true;
         }
 
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)

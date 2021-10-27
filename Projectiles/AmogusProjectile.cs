@@ -34,17 +34,21 @@ namespace VadesContentMod.Projectiles
 
             if (CurrentTarget == -1) TargetNPC();
 
-            NPC targetNPC = Main.npc[CurrentTarget];
+            if (CurrentTarget != -1)
+            {
+                NPC targetNPC = Main.npc[CurrentTarget];
 
-            if (targetNPC.CanBeChasedBy(this))
-            {
-                float speed = 20f;
-                float inertia = 30f;
-                Vector2 velocity = Vector2.Normalize(targetNPC.Center - projectile.Center) * speed;
-                projectile.velocity = (projectile.velocity * (inertia - 1) + velocity) / inertia;
-            } else
-            {
-                CurrentTarget = -1;
+                if (targetNPC != null && targetNPC.active)
+                {
+                    float speed = 30f;
+                    float inertia = 10f;
+                    Vector2 velocity = Vector2.Normalize(targetNPC.Center - projectile.Center) * speed;
+                    projectile.velocity = (projectile.velocity * (inertia - 1) + velocity) / inertia;
+                }
+                else
+                {
+                    CurrentTarget = -1;
+                }
             }
         }
 
