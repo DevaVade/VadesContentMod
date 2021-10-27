@@ -43,6 +43,10 @@ namespace VadesContentMod.Items.Armor
             player.ammoCost75 = true;
 
             player.armorPenetration += 1300;
+
+            player.wingTimeMax = 999999;
+            player.wingTime = player.wingTimeMax;
+            player.ignoreWater = true;
         }
 
         public override bool IsArmorSet(Item head, Item body, Item legs) =>
@@ -82,35 +86,6 @@ namespace VadesContentMod.Items.Armor
 
             player.lavaImmune = true;
             player.noFallDmg = true;
-            //you get extra bonus when you load other mods cus hahahahaha xdddddd(remove if u want but i prefer it being here)
-            if (ModLoader.GetMod("CalamityMod") != null)
-            {
-                ModLoader.GetMod("CalamityMod").GetItem("OmegaBlueHelmet").UpdateArmorSet(player);
-                ModLoader.GetMod("CalamityMod").GetItem("DemonshadeHelm").UpdateArmorSet(player);
-                ModLoader.GetMod("CalamityMod").GetItem("DemonshadeBreastplate").UpdateArmorSet(player);
-                ModLoader.GetMod("CalamityMod").GetItem("AuricTeslaBodyArmor").UpdateArmorSet(player);
-                ModLoader.GetMod("CalamityMod").GetItem("DaedalusHelm").UpdateArmorSet(player);
-                ModLoader.GetMod("CalamityMod").GetItem("DaedalusHat").UpdateArmorSet(player);
-                ModLoader.GetMod("CalamityMod").GetItem("DaedalusHelmet").UpdateArmorSet(player);
-                ModLoader.GetMod("CalamityMod").GetItem("DaedalusVisor").UpdateArmorSet(player);
-                ModLoader.GetMod("CalamityMod").GetItem("XerocMask").UpdateArmorSet(player);
-                ModLoader.GetMod("CalamityMod").GetItem("GodSlayerChestplate").UpdateArmorSet(player);
-                ModLoader.GetMod("CalamityMod").GetItem("GodSlayerMask").UpdateArmorSet(player);
-                ModLoader.GetMod("CalamityMod").GetItem("GodSlayerVisage").UpdateArmorSet(player);
-                ModLoader.GetMod("CalamityMod").GetItem("GodSlayerHelm").UpdateArmorSet(player);
-                ModLoader.GetMod("CalamityMod").GetItem("GodSlayerHornedHelm").UpdateArmorSet(player);
-                ModLoader.GetMod("CalamityMod").GetItem("SilvaHelm").UpdateArmorSet(player);
-                ModLoader.GetMod("CalamityMod").GetItem("SilvaHelmet").UpdateArmorSet(player);
-                ModLoader.GetMod("CalamityMod").GetItem("SilvaHornedHelm").UpdateArmorSet(player);
-                ModLoader.GetMod("CalamityMod").GetItem("SilvaMask").UpdateArmorSet(player);
-                ModLoader.GetMod("CalamityMod").GetItem("SilvaMaskedCap").UpdateArmorSet(player);
-            }
-            if (ModLoader.GetMod("FargowiltasSouls") != null)
-            {
-                ModLoader.GetMod("FargowiltasSouls").GetItem("StyxCrown").UpdateArmorSet(player);
-                ModLoader.GetMod("FargowiltasSouls").GetItem("MutantMask").UpdateArmorSet(player);
-                ModLoader.GetMod("FargowiltasSouls").GetItem("GaiaHelmet").UpdateArmorSet(player);
-            }
         }
     }
 }

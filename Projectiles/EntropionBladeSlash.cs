@@ -79,9 +79,9 @@ namespace VadesContentMod.Projectiles
         {
             DelegateMethods.v3_1 = new Vector3(3f, 0f, 0f);
             Utils.PlotTileLine(
-                player.Center, 
-                player.Center + projectile.velocity * 280f * projectile.scale, 
-                80f * projectile.scale, 
+                player.Center,
+                player.Center + projectile.velocity * 280f * projectile.scale,
+                80f * projectile.scale,
                 DelegateMethods.CastLight);
         }
 
@@ -118,9 +118,9 @@ namespace VadesContentMod.Projectiles
             Vector2 origin = new Vector2(110f, frameHeight / 2);
 
             Rectangle sourceRectangle = new Rectangle(
-                projectile.frame >= framesOnFirstColumn ? frameWidth : 0, 
-                (projectile.frame % framesOnFirstColumn) * frameHeight, 
-                frameWidth, 
+                projectile.frame >= framesOnFirstColumn ? frameWidth : 0,
+                (projectile.frame % framesOnFirstColumn) * frameHeight,
+                frameWidth,
                 frameHeight);
 
             spriteBatch.Draw(
@@ -145,9 +145,9 @@ namespace VadesContentMod.Projectiles
             DelegateMethods.tilecut_0 = TileCuttingContext.AttackProjectile;
 
             Utils.PlotTileLine(
-                projectile.Center, 
-                projectile.Center + projectile.velocity * 360f, 
-                300f, 
+                projectile.Center,
+                projectile.Center + projectile.velocity * 360f,
+                300f,
                 DelegateMethods.CutTiles);
         }
 
@@ -182,10 +182,11 @@ namespace VadesContentMod.Projectiles
                 Main.dust[id].noGravity = false;
             }
 
-            if (Main.rand.NextBool(3)) { 
+            if (Main.rand.NextBool(3))
+            {
                 int id = Gore.NewGore(
-                    target.Center, 
-                    Main.rand.NextVector2Circular(2f, 2f), 
+                    target.Center,
+                    Main.rand.NextVector2Circular(2f, 2f),
                     Main.rand.Next(GoreID.ChimneySmoke1, GoreID.ChimneySmoke2 + 1));
                 Main.gore[id].timeLeft = (int)(Main.gore[id].timeLeft * 0.7f);
             }
@@ -196,11 +197,42 @@ namespace VadesContentMod.Projectiles
                 target.buffImmune[num] = false;
             }
             target.AddBuff(num, 2, false); // re-added this so that it can bypass the enemies with debuff immunities like the eidolon wyrm
+
+            if (Main.myPlayer == projectile.owner)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    Vector2 position;
+
+                    if (Main.rand.NextBool())
+                    {
+                        // Top/bottom
+                        position = new Vector2(Main.rand.NextFloat(-Main.screenWidth / 2, Main.screenWidth / 2), Main.screenHeight + projectile.height);
+                        if (Main.rand.NextBool()) position.Y *= -1f;
+                    }
+                    else
+                    {
+                        // Right/left
+                        position = new Vector2(Main.screenWidth + projectile.width, Main.rand.NextFloat(-Main.screenHeight / 2, Main.screenHeight / 2));
+                        if (Main.rand.NextBool()) position.X *= -1f;
+                    }
+
+                    position += Main.LocalPlayer.position;
+
+                    Vector2 direction = Vector2.Normalize(target.Center - position);
+                    float speed = 2f + i * 3f;
+
+                    Projectile.NewProjectile(
+                        position,
+                        direction * speed,
+                        ModContent.ProjectileType<DivineSpear.DivineBlade>(),
+                        projectile.damage / 2,
+                        projectile.knockBack,
+                        projectile.owner);
+                }
+            }
         }
 
-        public override Color? GetAlpha(Color lightColor)
-        {
-            return Color.Lerp(lightColor, Color.White, 0.3f);
-        }
+        public override Color? GetAlpha(Color lightColor) => Color.Lerp(lightColor, Color.White, 0.3f);
     }
 }

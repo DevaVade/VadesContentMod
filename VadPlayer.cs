@@ -1,4 +1,5 @@
 using VadesContentMod.Buffs;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.DataStructures;
@@ -11,6 +12,8 @@ namespace VadesContentMod
     {
         public bool destructorSet;
 
+        public bool reviveCooldown;
+        public bool reviveBuff;
         public bool oneShotCooldown;
         public bool oneShot;
         public bool godlikePower;
@@ -29,6 +32,8 @@ namespace VadesContentMod
 
         public override void ResetEffects()
         {
+            reviveBuff = false;
+            reviveCooldown = false;
             destructorSet = false;
             oneShotCooldown = false;
             oneShot = false;
@@ -138,9 +143,9 @@ namespace VadesContentMod
             }
         }
 
-        public override bool CanBeHitByNPC(NPC npc, ref int cooldownSlot) => !godlikePower;
+        public override bool CanBeHitByNPC(NPC npc, ref int cooldownSlot) => !godlikePower && !reviveBuff;
 
-        public override bool CanBeHitByProjectile(Projectile proj) => !godlikePower;
+        public override bool CanBeHitByProjectile(Projectile proj) => !godlikePower && !reviveBuff;
 
         public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
         {
@@ -234,20 +239,9 @@ namespace VadesContentMod
             }
         }
 
-        public void WingStats()
-        {
-            player.wingTimeMax = 999999;
-            player.wingTime = player.wingTimeMax;
-            player.ignoreWater = true;
-        }
-
         public void WingStats2()
         {
-            player.wingTimeMax = 999999;
-            player.wingTime = player.wingTimeMax;
-            player.ignoreWater = true;
-
-            if (player.controlDown && player.controlJump && !player.mount.Active)
+            if (destructorSet && player.controlDown && player.controlJump && !player.mount.Active)
             {
                 player.position.Y -= player.velocity.Y;
                 if (player.velocity.Y > 0.1f)
@@ -255,6 +249,31 @@ namespace VadesContentMod
                 else if (player.velocity.Y < -0.1f)
                     player.velocity.Y = -0.1f;
             }
+        }
+
+        public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+        {
+            if (!reviveCooldown && destructorSet)
+            {
+                Main.PlaySound(SoundID.NPCDeath56);
+
+                int heal = player.statLifeMax2;
+
+                player.statLife = (int)MathHelper.Min(player.statLife + heal, player.statLifeMax2);
+                player.HealEffect(heal);
+
+                if (player.statLife > player.statLifeMax2)
+                {
+                    player.statLife = player.statLifeMax2;
+                }
+
+                player.AddBuff(ModContent.BuffType<ReviveCooldown>(), 2400, true);
+                player.AddBuff(ModContent.BuffType<ReviveBuff>(), 600, true);
+
+                return false;
+            }
+
+            return base.PreKill(damage, hitDirection, pvp, ref playSound, ref genGore, ref damageSource);
         }
     }
 }
