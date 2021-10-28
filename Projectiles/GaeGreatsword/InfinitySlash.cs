@@ -20,6 +20,12 @@ namespace VadesContentMod.Projectiles.GaeGreatsword
             set => projectile.ai[0] = value ? 1f : 0f;
         }
 
+        public float SwingTimer
+        {
+            get => projectile.ai[1];
+            set => projectile.ai[1] = value;
+        }
+
         public float Charge
         {
             get => projectile.localAI[0];
@@ -48,7 +54,10 @@ namespace VadesContentMod.Projectiles.GaeGreatsword
 
 
             if (Released)
+            {
+                SwingTimer++;
                 UpdateAnimation();
+            }
             else
             {
                 projectile.timeLeft = 2;
@@ -177,6 +186,23 @@ namespace VadesContentMod.Projectiles.GaeGreatsword
         }
 
         public override bool CanDamage() => Released;
+
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
+        {
+            if (!Released) return false;
+
+            Player player = Main.player[projectile.owner];
+            Vector2 direction = projectile.velocity.RotatedBy(MathHelper.PiOver2 - SwingTimer * 0.13f);
+            float point = 0f;
+
+            return Collision.CheckAABBvLineCollision(
+                targetHitbox.TopLeft(),
+                targetHitbox.Size(),
+                player.Center,
+                player.Center + direction * 100f,
+                64f,
+                ref point);
+        }
 
         public override bool ShouldUpdatePosition() => false;
 

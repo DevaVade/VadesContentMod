@@ -13,6 +13,7 @@ namespace VadesContentMod
     public partial class VadPlayer : ModPlayer
     {
         private int MaxFreeze = -1;
+        private float oldMusicFade = 0f;
 
         public bool FreezeTime = false;
         public int freezeLength = 180;
@@ -79,6 +80,7 @@ namespace VadesContentMod
                 if (MaxFreeze < 0)
                     MaxFreeze = freezeLength;
 
+                // Shader
                 if (Main.netMode != NetmodeID.Server)
                 {
                     if (!Filters.Scene["VadesContentMod:Grayscale"].IsActive())
@@ -92,7 +94,31 @@ namespace VadesContentMod
                     Filters.Scene["VadesContentMod:Grayscale"].GetShader().UseProgress(progress);
                 }
 
-                
+                // Stop music
+                if (!Main.dedServ)
+                {
+                    if (freezeLength < 5)
+                    {
+                        if (oldMusicFade > 0)
+                        {
+                            Main.musicFade[Main.curMusic] = oldMusicFade;
+                            oldMusicFade = 0;
+                        }
+                    } else
+                    {
+                        if (oldMusicFade == 0)
+                        {
+                            oldMusicFade = Main.musicFade[Main.curMusic];
+                        }
+                        else
+                        {
+                            for (int i = 0; i < Main.musicFade.Length; i++)
+                            {
+                                Main.musicFade[i] = 0f;
+                            }
+                        }
+                    }
+                }
 
                 // Freeze NPCs
                 for (int i = 0; i < Main.maxNPCs; i++)
