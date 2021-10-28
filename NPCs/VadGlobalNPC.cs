@@ -6,13 +6,9 @@ namespace VadesContentMod.NPCs
 {
     public partial class VadGlobalNPC : GlobalNPC
     {
-        public override bool InstancePerEntity
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public override bool InstancePerEntity => true;
+
+        public bool TimeFrozen = false;
         public bool firstTick = false;
         public bool godlikePower;
         public bool godCurse;
@@ -20,9 +16,22 @@ namespace VadesContentMod.NPCs
 
         public override void ResetEffects(NPC npc)
         {
+            TimeFrozen = false;
             godlikePower = false;
             godCurse = false;
             godCurse2 = false;
+        }
+
+        public override bool PreAI(NPC npc)
+        {
+            if (TimeFrozen)
+            {
+                npc.position = npc.oldPosition;
+                npc.frameCounter = 0;
+                return false;
+            }
+
+            return base.PreAI(npc);
         }
 
         public override void SetDefaults(NPC npc)
@@ -79,6 +88,41 @@ namespace VadesContentMod.NPCs
                     damage = 150000;
                 }
             }
+
+            if (TimeFrozen && npc.life == 1)
+            {
+                if (npc.lifeRegen < 0)
+                    npc.lifeRegen = 0;
+            }
+        }
+
+        public override bool CheckDead(NPC npc)
+        {
+            if (TimeFrozen)
+            {
+                npc.life = 1;
+                return false;
+            }
+
+            return base.CheckDead(npc);
+        }
+
+        public override bool CanHitPlayer(NPC npc, Player target, ref int cooldownSlot) => !TimeFrozen;
+
+        public override bool? CanBeHitByItem(NPC npc, Player player, Item item)
+        {
+            if (TimeFrozen && npc.life == 1)
+                return false;
+
+            return base.CanBeHitByItem(npc, player, item);
+        }
+
+        public override bool? CanBeHitByProjectile(NPC npc, Projectile projectile)
+        {
+            if (TimeFrozen && npc.life == 1)
+                return false;
+
+            return base.CanBeHitByProjectile(npc, projectile);
         }
     }
 }
