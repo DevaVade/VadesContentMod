@@ -9,7 +9,7 @@ namespace VadesContentMod.NPCs
         public override bool InstancePerEntity => true;
 
         public bool TimeFrozen = false;
-        public bool firstTick = false;
+        public bool firstTick = true;
         public bool godlikePower;
         public bool godCurse;
         public bool godCurse2;
@@ -24,14 +24,18 @@ namespace VadesContentMod.NPCs
 
         public override bool PreAI(NPC npc)
         {
-            if (TimeFrozen)
+            bool doAI = true;
+            if (TimeFrozen && !firstTick)
             {
                 npc.position = npc.oldPosition;
                 npc.frameCounter = 0;
-                return false;
+                doAI = false;
             }
 
-            return base.PreAI(npc);
+            if (firstTick)
+                firstTick = false;
+
+            return doAI;
         }
 
         public override void SetDefaults(NPC npc)
