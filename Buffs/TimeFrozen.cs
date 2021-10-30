@@ -4,26 +4,24 @@ using Terraria.ModLoader;
 
 namespace VadesContentMod.Buffs
 {
-    public class ReviveCooldown : ModBuff
+    public class TimeFrozen : ModBuff
     {
         public override bool Autoload(ref string name, ref string texture)
         {
-            texture = "Terraria/Buff_" + BuffID.Confused;
+            texture = "Terraria/Buff_" + BuffID.Slow;
             return base.Autoload(ref name, ref texture);
         }
 
         public override void SetDefaults()
         {
-            DisplayName.SetDefault("Revive Cooldown");
-            Description.SetDefault("You can't revive");
-
+            Main.debuff[Type] = true;
+            Main.buffNoTimeDisplay[Type] = true;
             Main.buffNoSave[Type] = true;
-            canBeCleared = false;
         }
 
-        public override void Update(Player player, ref int buffIndex)
+        public override void Update(NPC npc, ref int buffIndex)
         {
-            player.GetModPlayer<VadPlayer>().reviveCooldown = true;
+            npc.GetGlobalNPC<NPCs.VadGlobalNPC>().TimeFrozen = true;
         }
     }
 }

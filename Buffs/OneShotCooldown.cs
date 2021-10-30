@@ -17,6 +17,7 @@ namespace VadesContentMod.Buffs
             DisplayName.SetDefault("Overpowered Cooldown");
             Description.SetDefault("You can't get overpowered");
 
+            canBeCleared = false;
             Main.buffNoSave[Type] = true; //to bypass trhough the antidebuff
         }
 

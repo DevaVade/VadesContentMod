@@ -1,15 +1,23 @@
-using VadesContentMod.Buffs;
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.ID;
 using Terraria.DataStructures;
 using Terraria.GameInput;
+using Terraria.Graphics.Effects;
+using Terraria.ID;
 using Terraria.ModLoader;
+using VadesContentMod.Buffs;
+using VadesContentMod.Projectiles;
 
 namespace VadesContentMod
 {
     public partial class VadPlayer : ModPlayer
     {
+        private int MaxFreeze = -1;
+        private float oldMusicFade = 0f;
+
+        public bool FreezeTime = false;
+        public int freezeLength = 180;
+
         public bool destructorSet;
 
         public bool reviveCooldown;
@@ -50,7 +58,13 @@ namespace VadesContentMod
             godSet = false;
         }
 
-        public override void UpdateDead() => ResetEffects();
+        public override void UpdateDead()
+        {
+            ResetEffects();
+
+            FreezeTime = false;
+            freezeLength = 0;
+        }
 
         public override void PostUpdateMiscEffects()
         {
@@ -59,6 +73,97 @@ namespace VadesContentMod
                 player.statDefense = 0;
                 player.endurance = 0;
                 player.ghost = true;
+            }
+
+            if (FreezeTime && freezeLength > 0)
+            {
+                if (MaxFreeze < 0)
+                    MaxFreeze = freezeLength;
+
+                // Shader
+                if (Main.netMode != NetmodeID.Server)
+                {
+                    if (!Filters.Scene["VadesContentMod:Grayscale"].IsActive())
+                    {
+                        Filters.Scene.Activate("VadesContentMod:Grayscale");
+                    }
+
+                    float progress = (1f - ((freezeLength + 30f) / (MaxFreeze ))) * 2f;
+                    if (progress > 1f) progress = 1f;
+
+                    Filters.Scene["VadesContentMod:Grayscale"].GetShader().UseProgress(progress);
+                }
+
+                // Stop music
+                if (!Main.dedServ)
+                {
+                    if (freezeLength < 5)
+                    {
+                        if (oldMusicFade > 0)
+                        {
+                            Main.musicFade[Main.curMusic] = oldMusicFade;
+                            oldMusicFade = 0;
+                        }
+                    } else
+                    {
+                        if (oldMusicFade == 0)
+                        {
+                            oldMusicFade = Main.musicFade[Main.curMusic];
+                        }
+                        else
+                        {
+                            for (int i = 0; i < Main.musicFade.Length; i++)
+                            {
+                                Main.musicFade[i] = 0f;
+                            }
+                        }
+                    }
+                }
+
+                // Freeze NPCs
+                for (int i = 0; i < Main.maxNPCs; i++)
+                {
+                    NPC npc = Main.npc[i];
+                    if (npc.active && !npc.HasBuff(ModContent.BuffType<TimeFrozen>()))
+                    {
+
+                        npc.AddBuff(ModContent.BuffType<TimeFrozen>(), freezeLength);
+                    }
+                }
+
+                // Freeze projectiles
+                for (int i = 0; i < Main.maxProjectiles; i++)
+                {
+                    Projectile p = Main.projectile[i];
+                    if (p.active && !(p.minion && !ProjectileID.Sets.MinionShot[p.type]))
+                    {
+                        var globalProj = p.GetGlobalProjectile<VadGlobalProjectile>();
+
+                        if (!globalProj.TimeFreezeImmune && globalProj.TimeFrozen == 0)
+                            globalProj.TimeFrozen = freezeLength;
+                    }
+                }
+
+                freezeLength--;
+
+                if (freezeLength <= 60 && Main.netMode != NetmodeID.Server && Filters.Scene["VadesContentMod:Grayscale"].IsActive())
+                {
+                    Filters.Scene.Deactivate("VadesContentMod:Grayscale");
+                }
+
+                if (freezeLength <= 0)
+                {
+                    FreezeTime = false;
+                    freezeLength = 180;
+                    MaxFreeze = -1;
+
+                    for (int i = 0; i < Main.maxNPCHitSounds; i++)
+                    {
+                        NPC npc = Main.npc[i];
+                        if (npc.active && !npc.dontTakeDamage && npc.life == 1 && npc.lifeMax > 1)
+                            npc.StrikeNPC(9999, 0f, 0);
+                    }
+                }
             }
         }
 

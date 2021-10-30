@@ -6,23 +6,36 @@ namespace VadesContentMod.NPCs
 {
     public partial class VadGlobalNPC : GlobalNPC
     {
-        public override bool InstancePerEntity
-        {
-            get
-            {
-                return true;
-            }
-        }
-        public bool firstTick = false;
+        public override bool InstancePerEntity => true;
+
+        public bool TimeFrozen = false;
+        public bool firstTick = true;
         public bool godlikePower;
         public bool godCurse;
         public bool godCurse2;
 
         public override void ResetEffects(NPC npc)
         {
+            TimeFrozen = false;
             godlikePower = false;
             godCurse = false;
             godCurse2 = false;
+        }
+
+        public override bool PreAI(NPC npc)
+        {
+            bool doAI = true;
+            if (TimeFrozen && !firstTick)
+            {
+                npc.position = npc.oldPosition;
+                npc.frameCounter = 0;
+                doAI = false;
+            }
+
+            if (firstTick)
+                firstTick = false;
+
+            return doAI;
         }
 
         public override void SetDefaults(NPC npc)
@@ -61,7 +74,7 @@ namespace VadesContentMod.NPCs
                 if (npc.lifeRegen > 0)
                     npc.lifeRegen = 0;
 
-                npc.lifeRegen -= 8000;
+                npc.lifeRegen -= 6000;
                 if (damage < 20000000)
                 {
                     damage = 20000000;
@@ -73,12 +86,47 @@ namespace VadesContentMod.NPCs
                 if (npc.lifeRegen > 0)
                     npc.lifeRegen = 0;
 
-                npc.lifeRegen -= 1200;
-                if (damage < 150000)
+                npc.lifeRegen -= 1100;
+                if (damage < 15000)
                 {
-                    damage = 150000;
+                    damage = 15000;
                 }
             }
+
+            if (TimeFrozen && npc.life == 1)
+            {
+                if (npc.lifeRegen < 0)
+                    npc.lifeRegen = 0;
+            }
+        }
+
+        public override bool CheckDead(NPC npc)
+        {
+            if (TimeFrozen)
+            {
+                npc.life = 1;
+                return false;
+            }
+
+            return base.CheckDead(npc);
+        }
+
+        public override bool CanHitPlayer(NPC npc, Player target, ref int cooldownSlot) => !TimeFrozen;
+
+        public override bool? CanBeHitByItem(NPC npc, Player player, Item item)
+        {
+            if (TimeFrozen && npc.life == 1)
+                return false;
+
+            return base.CanBeHitByItem(npc, player, item);
+        }
+
+        public override bool? CanBeHitByProjectile(NPC npc, Projectile projectile)
+        {
+            if (TimeFrozen && npc.life == 1)
+                return false;
+
+            return base.CanBeHitByProjectile(npc, projectile);
         }
     }
 }

@@ -30,6 +30,7 @@ namespace VadesContentMod.Items.Accessories
             VadPlayer.WingStats2();
             player.runSlowdown = 2;
             player.moveSpeed += 0.5f;
+            player.wingTime = 3600;
         }
 
         public override void VerticalWingSpeeds(Player player, ref float ascentWhenFalling, ref float ascentWhenRising,
