@@ -117,7 +117,7 @@ namespace VadesContentMod.Projectiles.GaeGreatsword
 
                     npc.dontTakeDamage = false;
 
-                    int damage = 6999999;
+                    int damage = 999999;
                     npc.StrikeNPC(damage, 0f, 0, true);
                     npc.life = 1;
                     npc.lifeMax = 1;
