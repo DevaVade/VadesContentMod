@@ -52,6 +52,7 @@ namespace VadesContentMod.Projectiles.GaeGreatsword
             projectile.position = player.Center + projectile.velocity * 5f;
             projectile.rotation = projectile.velocity.ToRotation();
 
+            SpawnDusts();
 
             if (Released)
             {
@@ -67,6 +68,17 @@ namespace VadesContentMod.Projectiles.GaeGreatsword
             }
         }
 
+        private void SpawnDusts()
+        {
+            if (Released) return;
+
+            Vector2 directionIn = Main.rand.NextFloat(MathHelper.TwoPi).ToRotationVector2() * Main.rand.NextFloat(150f, 200f);
+
+            Dust dust = Dust.NewDustPerfect(projectile.position - directionIn, DustID.LifeDrain, Scale: 2f);
+            dust.noGravity = true;
+            dust.velocity = directionIn * 0.08f;
+        }
+
         private void ChargeSlash(Player player)
         {
             if (!player.channel)
@@ -80,6 +92,8 @@ namespace VadesContentMod.Projectiles.GaeGreatsword
                     if (projectile.owner == Main.myPlayer)
                     {
                         Main.PlaySound(SoundID.Item71);
+
+                        Projectile.NewProjectile(Main.MouseWorld, Vector2.Zero, ModContent.ProjectileType<UltimateDestruction>(), 0, 0f, projectile.owner);
                     }
                 }
                 else
@@ -98,6 +112,7 @@ namespace VadesContentMod.Projectiles.GaeGreatsword
             {
                 if (playSound && projectile.owner == Main.myPlayer)
                 {
+                    player.GetModPlayer<VadPlayer>().shockwaveTime = 0;
                     Main.PlaySound(SoundID.Item14);
                     playSound = false;
                 }
@@ -228,9 +243,12 @@ namespace VadesContentMod.Projectiles.GaeGreatsword
             Color color = GetAlpha(lightColor) ?? lightColor;
             var spriteEffects = projectile.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipVertically;
 
+            float shakeValue = (1f - ((float)Charge / MaxCharge)) * 16f;
+            Vector2 shake = new Vector2(Main.rand.NextFloat(shakeValue), Main.rand.NextFloat(shakeValue));
+
             spriteBatch.Draw(
                 texture,
-                projectile.position - Main.screenPosition,
+                projectile.position + shake - Main.screenPosition,
                 sourceRect,
                 color * projectile.Opacity,
                 projectile.rotation,

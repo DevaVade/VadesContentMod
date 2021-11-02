@@ -10,13 +10,15 @@ using VadesContentMod.Projectiles;
 
 namespace VadesContentMod
 {
-    public partial class VadPlayer : ModPlayer
+    public class VadPlayer : ModPlayer
     {
         private int MaxFreeze = -1;
         private float oldMusicFade = 0f;
 
         public bool FreezeTime = false;
         public int freezeLength = 180;
+
+        public int shockwaveTime = -1;
 
         public bool destructorSet;
 
@@ -88,7 +90,7 @@ namespace VadesContentMod
                         Filters.Scene.Activate("VadesContentMod:Grayscale");
                     }
 
-                    float progress = (1f - ((freezeLength + 30f) / (MaxFreeze ))) * 2f;
+                    float progress = MathHelper.Max(freezeLength - 120f, 0f) / MaxFreeze * 2f;
                     if (progress > 1f) progress = 1f;
 
                     Filters.Scene["VadesContentMod:Grayscale"].GetShader().UseProgress(progress);
@@ -104,7 +106,8 @@ namespace VadesContentMod
                             Main.musicFade[Main.curMusic] = oldMusicFade;
                             oldMusicFade = 0;
                         }
-                    } else
+                    }
+                    else
                     {
                         if (oldMusicFade == 0)
                         {
@@ -163,6 +166,29 @@ namespace VadesContentMod
                         if (npc.active && !npc.dontTakeDamage && npc.life == 1 && npc.lifeMax > 1)
                             npc.StrikeNPC(9999, 0f, 0);
                     }
+                }
+            }
+
+            if (Main.netMode != NetmodeID.Server)
+            {
+                if (shockwaveTime >= 0)
+                {
+                    if (!Filters.Scene["VadesContentMod:Shockwave"].IsActive())
+                    {
+                        Filters.Scene.Activate("VadesContentMod:Shockwave", player.Center).GetShader().UseColor(3f, 8f, 25f);
+                    }
+
+                    float progress = shockwaveTime / 30f;
+                    float opacity = 100f - (progress * 80f);
+                    Filters.Scene["VadesContentMod:Shockwave"].GetShader().UseProgress(progress).UseOpacity(opacity).UseTargetPosition(player.Center);
+
+
+                    if (shockwaveTime++ >= 120)
+                        shockwaveTime = -1;
+                }
+                else if (Filters.Scene["VadesContentMod:Shockwave"].IsActive())
+                {
+                    Filters.Scene.Deactivate("VadesContentMod:Shockwave");
                 }
             }
         }
@@ -258,7 +284,8 @@ namespace VadesContentMod
             {
                 target.life = 1;
                 target.StrikeNPC(1, 0f, 1);
-            } else if (godGauntlet)
+            }
+            else if (godGauntlet)
             {
                 target.AddBuff(mod.BuffType("GodCurse2"), 1000);
             }
@@ -270,7 +297,8 @@ namespace VadesContentMod
             {
                 target.life = 1;
                 target.StrikeNPC(1, 0f, 1);
-            } else if (godGauntlet)
+            }
+            else if (godGauntlet)
             {
                 target.AddBuff(mod.BuffType("GodCurse2"), 1000);
             }
@@ -282,7 +310,8 @@ namespace VadesContentMod
             {
                 int hitDirection = player.position.X > target.position.X ? 1 : -1;
                 target.KillMe(PlayerDeathReason.ByPlayer(player.whoAmI), 999999, hitDirection, true);
-            } else if (godGauntlet)
+            }
+            else if (godGauntlet)
             {
                 target.AddBuff(mod.BuffType("GodCurse2"), 2);
             }
@@ -294,7 +323,8 @@ namespace VadesContentMod
             {
                 int hitDirection = proj.position.X > target.position.X ? 1 : -1;
                 target.KillMe(PlayerDeathReason.ByPlayer(player.whoAmI), 999999, hitDirection, true);
-            } else if (godGauntlet)
+            }
+            else if (godGauntlet)
             {
                 target.AddBuff(mod.BuffType("GodCurse2"), 2);
             }
@@ -316,7 +346,7 @@ namespace VadesContentMod
                 }
 
                 if (num == -1) return;
-            
+
                 player.DelBuff(num);
             }
         }

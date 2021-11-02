@@ -28,6 +28,11 @@ namespace VadesContentMod
             {
                 Ref<Effect> invertRef = new Ref<Effect>(GetEffect("Effects/Grayscale"));
                 Filters.Scene["VadesContentMod:Grayscale"] = new Filter(new ScreenShaderData(invertRef, "Main"), EffectPriority.VeryHigh);
+                Filters.Scene["VadesContentMod:Grayscale"].Load();
+
+                Ref<Effect> shockwaveRef = new Ref<Effect>(GetEffect("Effects/Shockwave"));
+                Filters.Scene["VadesContentMod:Shockwave"] = new Filter(new ScreenShaderData(shockwaveRef, "Shockwave"), EffectPriority.VeryHigh);
+                Filters.Scene["VadesContentMod:Shockwave"].Load();
             }
         }
 
