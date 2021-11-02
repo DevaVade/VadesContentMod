@@ -20,14 +20,14 @@ float uSaturation;
 float4 uSourceRect;
 float2 uZoom;
 
-float4 Main(float4 sampleColor : COLOR0, float2 coords : TEXCOORD0) : COLOR0
+float4 Main(float2 coords : TEXCOORD0) : COLOR0
 {
 	float4 color = tex2D(uImage0, coords);
 
 	color.rgb = (color.r + color.g + color.b) / 3; // Black and white
-	color.rgb += (1 - color) * (1 - uProgress); // White fade
+	color.rgb += (1 - color) * uProgress; // White fade
 
-	return color * sampleColor;
+	return color;
 }
 
 technique Technique1
