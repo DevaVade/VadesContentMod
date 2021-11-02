@@ -88,6 +88,7 @@ namespace VadesContentMod.Projectiles.GaeGreatsword
                     Released = true;
                     projectile.timeLeft = 30;
                     player.itemTime = player.itemAnimation = 30;
+                    player.GetModPlayer<VadPlayer>().screenShake = 100;
 
                     if (projectile.owner == Main.myPlayer)
                     {

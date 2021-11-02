@@ -18,6 +18,8 @@ namespace VadesContentMod
         public bool FreezeTime = false;
         public int freezeLength = 180;
 
+        public int screenShake = 0;
+
         public int shockwaveTime = -1;
 
         public bool destructorSet;
@@ -70,6 +72,8 @@ namespace VadesContentMod
 
         public override void PostUpdateMiscEffects()
         {
+            if (screenShake > 0) screenShake--;
+
             if (godCurse)
             {
                 player.statDefense = 0;
@@ -409,6 +413,16 @@ namespace VadesContentMod
             }
 
             return base.PreKill(damage, hitDirection, pvp, ref playSound, ref genGore, ref damageSource);
+        }
+
+        public override void ModifyScreenPosition()
+        {
+            if (screenShake > 0)
+            {
+                float shakeValue = screenShake;
+                Main.screenPosition.X += Main.rand.NextFloat(-shakeValue, shakeValue);
+                Main.screenPosition.Y += Main.rand.NextFloat(-shakeValue, shakeValue);
+            }
         }
     }
 }
