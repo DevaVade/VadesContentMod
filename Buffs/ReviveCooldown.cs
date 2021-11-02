@@ -17,8 +17,8 @@ namespace VadesContentMod.Buffs
             DisplayName.SetDefault("Revive Cooldown");
             Description.SetDefault("You can't revive");
 
-            Main.debuff[Type] = true;
             Main.buffNoSave[Type] = true;
+            canBeCleared = false;
         }
 
         public override void Update(Player player, ref int buffIndex)

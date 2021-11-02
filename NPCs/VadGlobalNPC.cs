@@ -74,7 +74,7 @@ namespace VadesContentMod.NPCs
                 if (npc.lifeRegen > 0)
                     npc.lifeRegen = 0;
 
-                npc.lifeRegen -= 8000;
+                npc.lifeRegen -= 6000;
                 if (damage < 20000000)
                 {
                     damage = 20000000;
@@ -86,10 +86,10 @@ namespace VadesContentMod.NPCs
                 if (npc.lifeRegen > 0)
                     npc.lifeRegen = 0;
 
-                npc.lifeRegen -= 1200;
-                if (damage < 150000)
+                npc.lifeRegen -= 1100;
+                if (damage < 15000)
                 {
-                    damage = 150000;
+                    damage = 15000;
                 }
             }
 
