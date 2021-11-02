@@ -31,6 +31,8 @@ namespace VadesContentMod.Projectiles.GaeGreatsword
                 projectile.frameCounter = 0;
                 projectile.frame++;
             }
+
+            VadUtils.ButcherNPCs(projectile.Hitbox);
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)

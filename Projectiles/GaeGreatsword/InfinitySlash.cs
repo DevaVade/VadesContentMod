@@ -123,39 +123,7 @@ namespace VadesContentMod.Projectiles.GaeGreatsword
         {
             if (Released)
             {
-                // Butcher all NPCs
-                for (int i = 0; i < Main.maxNPCs; i++)
-                {
-                    NPC npc = Main.npc[i];
-
-                    if (!npc.active || npc.friendly) continue;
-
-                    npc.dontTakeDamage = false;
-
-                    int damage = 999999;
-                    npc.StrikeNPC(damage, 0f, 0, true);
-                    npc.life = 1;
-                    npc.lifeMax = 1;
-                    npc.StrikeNPC(damage, 0f, 0, true);
-                    npc.lifeRegen -= damage;
-
-                    if (npc.life > 0)
-                    {
-                        npc.NPCLoot();
-                    }
-
-                    if (npc.type == NPCID.TargetDummy)
-                    {
-                        npc.active = false;
-                        Main.PlaySound(npc.DeathSound, npc.position);
-                        npc.NPCLoot();
-                        WorldGen.KillTile((int)npc.position.X / 16, (int)npc.position.Y / 16);
-                    }
-
-                    npc.life = 0;
-                    npc.active = false;
-                    Main.npc[npc.whoAmI] = new NPC();
-                }
+                VadUtils.ButcherNPCs();
 
                 var modPlayer = Main.player[projectile.owner].GetModPlayer<VadPlayer>();
                 if (!modPlayer.FreezeTime)
