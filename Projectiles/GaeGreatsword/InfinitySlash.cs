@@ -175,7 +175,7 @@ namespace VadesContentMod.Projectiles.GaeGreatsword
             if (!Released) return false;
 
             Player player = Main.player[projectile.owner];
-            Vector2 direction = projectile.velocity.RotatedBy(MathHelper.PiOver2 - SwingTimer * 0.13f);
+            Vector2 direction = projectile.velocity.RotatedBy(MathHelper.PiOver2 - SwingTimer * 0.13f * projectile.direction);
             float point = 0f;
 
             return Collision.CheckAABBvLineCollision(

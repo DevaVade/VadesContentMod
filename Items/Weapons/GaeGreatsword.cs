@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 using VadesContentMod.Projectiles.GaeGreatsword;
@@ -28,7 +27,7 @@ namespace VadesContentMod.Items.Weapons
             item.noUseGraphic = true;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.melee = true;
-            item.damage = 1;
+            item.damage = 999999;
             item.knockBack = 100f;
             item.crit = 100;
             item.rare = ItemRarityID.Purple;
