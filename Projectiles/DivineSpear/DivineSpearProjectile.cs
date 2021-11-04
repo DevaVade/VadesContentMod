@@ -121,7 +121,7 @@ namespace VadesContentMod.Projectiles.DivineSpear
 
             for (int d = 0; d < 2; d++)
             {
-                Dust dust = Dust.NewDustDirect(projectile.position, projectile.width, projectile.height, 178, Scale: 1.5f);
+                Dust dust = Dust.NewDustDirect(projectile.position, projectile.width, projectile.height, DustID.BubbleBurst_White, Scale: 1.5f);
                 dust.velocity *= 2f;
             }
 

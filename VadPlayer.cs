@@ -367,8 +367,8 @@ namespace VadesContentMod
 
                 for (int d = 0; d < 30; d++)
                 {
-                    int id = Dust.NewDust(player.Center, 5, 5, DustID.LifeDrain);
-                    Main.dust[id].velocity *= 2;
+                    Dust dust = Dust.NewDustDirect(player.Center, 5, 5, DustID.LifeDrain);
+                    dust.velocity *= 2;
                 }
 
                 for (int d = 0; d < 10; d++)

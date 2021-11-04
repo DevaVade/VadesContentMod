@@ -1,4 +1,5 @@
 ﻿using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace VadesContentMod.Items.Armor
@@ -19,7 +20,7 @@ namespace VadesContentMod.Items.Armor
             item.height = 32;
             item.value = Item.sellPrice(gold: 69);
             item.defense = 50000;
-            item.rare = 11;
+            item.rare = ItemRarityID.Purple;
             item.expert = true;
         }
 

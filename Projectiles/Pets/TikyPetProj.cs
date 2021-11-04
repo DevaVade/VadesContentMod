@@ -10,10 +10,11 @@ namespace VadesContentMod.Projectiles.Pets
 	{
 		public override void SetStaticDefaults()
 		{
-			base.DisplayName.SetDefault("Smol tiky");
-			Main.projFrames[base.projectile.type] = 5;
-			Main.projPet[base.projectile.type] = true;
-			ProjectileID.Sets.LightPet[base.projectile.type] = true;
+			DisplayName.SetDefault("Smol tiky");
+
+			Main.projFrames[projectile.type] = 5;
+			Main.projPet[projectile.type] = true;
+			ProjectileID.Sets.LightPet[projectile.type] = true;
 		}
 
 		public override void SetDefaults()
@@ -36,36 +37,43 @@ namespace VadesContentMod.Projectiles.Pets
 
 		public override void AI()
 		{
-			Lighting.AddLight(base.projectile.Center, (float)Main.DiscoR / 110f, (float)Main.DiscoG / 110f, (float)Main.DiscoB / 110f);
-			Player player = Main.player[base.projectile.owner];
-			VadPlayer modPlayer = player.GetModPlayer<VadPlayer>();
-			if (player.dead)
-			{
-				modPlayer.tiky = false;
-			}
-			if (modPlayer.tiky)
-			{
-				base.projectile.timeLeft = 2;
-			}
-			if (Vector2.Distance(base.projectile.Center, player.Center) > 2500f)
-			{
-				base.projectile.Center = player.Center;
-			}
+			Lighting.AddLight(projectile.Center, Main.DiscoColor.ToVector3() / 110f);
 
-			if (projectile.Distance(player.Center) > 3000)
-                projectile.Center = player.Center;
+			Player player = Main.player[projectile.owner];
+			VadPlayer modPlayer = player.GetModPlayer<VadPlayer>();
+
+			if (player.dead)
+				modPlayer.tiky = false;
+
+			if (modPlayer.tiky)
+				projectile.timeLeft = 2;
+
+			if (Vector2.Distance(projectile.Center, player.Center) > 2500f)
+			{
+				projectile.Center = player.Center;
+			}
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-            Texture2D texture2D13 = Main.projectileTexture[projectile.type];
-            int num156 = Main.projectileTexture[projectile.type].Height / Main.projFrames[projectile.type];
-            int y3 = num156 * projectile.frame; 
-            Rectangle rectangle = new Rectangle(0, y3, texture2D13.Width, num156);
-            Vector2 origin2 = rectangle.Size() / 2f;
+            Texture2D texture = Main.projectileTexture[projectile.type];
+            int frameHeight = texture.Height / Main.projFrames[projectile.type];
+
+            Rectangle sourceRectangle = new Rectangle(0, projectile.frame * frameHeight, texture.Width, frameHeight);
+            Vector2 origin = sourceRectangle.Size() / 2f;
             SpriteEffects spriteEffects = projectile.spriteDirection < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 
-            Main.spriteBatch.Draw(texture2D13, projectile.Center - Main.screenPosition + new Vector2(0f, projectile.gfxOffY), new Microsoft.Xna.Framework.Rectangle?(rectangle), projectile.GetAlpha(lightColor), projectile.rotation, origin2, projectile.scale, spriteEffects, 0f);
+            spriteBatch.Draw(
+				texture, 
+				projectile.Center - Main.screenPosition + new Vector2(0f, projectile.gfxOffY), 
+				sourceRectangle, 
+				projectile.GetAlpha(lightColor), 
+				projectile.rotation, 
+				origin, 
+				projectile.scale, 
+				spriteEffects, 
+				0f);
+
             return false;
         }
 	}

@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace VadesContentMod.NPCs
@@ -52,14 +53,15 @@ namespace VadesContentMod.NPCs
             {
                 if (Main.rand.NextBool(7))
                 {
-                    int dust = Dust.NewDust(npc.position - new Vector2(2f, 2f), npc.width + 4, npc.height + 4, 86, npc.velocity.X * 0.4f, npc.velocity.Y * 0.4f, 100, new Color(Main.DiscoR, Main.DiscoG, Main.DiscoB), 3.5f);
-                    Main.dust[dust].noGravity = true;
-                    Main.dust[dust].velocity *= 1.2f;
-                    Main.dust[dust].velocity.Y -= 0.15f;
+                    Dust dust = Dust.NewDustDirect(npc.position - new Vector2(2f, 2f), npc.width + 4, npc.height + 4, DustID.AmethystBolt, npc.velocity.X * 0.4f, npc.velocity.Y * 0.4f, 100, Main.DiscoColor, 3.5f);
+                    dust.noGravity = true;
+                    dust.velocity *= 1.2f;
+                    dust.velocity.Y -= 0.15f;
+
                     if (Main.rand.NextBool(4))
                     {
-                        Main.dust[dust].noGravity = false;
-                        Main.dust[dust].scale *= 0.5f;
+                        dust.noGravity = false;
+                        dust.scale *= 0.5f;
                     }
                 }
 

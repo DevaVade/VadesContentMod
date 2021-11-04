@@ -92,16 +92,16 @@ namespace VadesContentMod.Projectiles
 
             if (Main.rand.NextBool(10))
             {
-                int id = Dust.NewDust(player.Center + direction * 10f, 5, 5, DustID.LifeDrain, 0, 0, 0, default, 3f);
-                Main.dust[id].velocity = direction.RotatedBy(Main.rand.NextFloat(-spread, spread)) * 8f * projectile.scale;
-                Main.dust[id].fadeIn = 0f;
+                Dust dust = Dust.NewDustDirect(player.Center + direction * 10f, 5, 5, DustID.LifeDrain, Scale: 3f);
+                dust.velocity = direction.RotatedBy(Main.rand.NextFloat(-spread, spread)) * 8f * projectile.scale;
+                dust.fadeIn = 0f;
             }
 
             if (Main.rand.NextBool(8))
             {
-                int id = Dust.NewDust(player.Center + direction * 10f, 5, 5, DustID.TopazBolt, 0, 0, 0, default, 1.5f);
-                Main.dust[id].velocity = direction.RotatedBy(Main.rand.NextFloat(-spread * 1.5f * projectile.direction)) * 6f * projectile.scale;
-                Main.dust[id].noGravity = false;
+                Dust dust = Dust.NewDustDirect(player.Center + direction * 10f, 5, 5, DustID.TopazBolt, Scale: 1.5f);
+                dust.velocity = direction.RotatedBy(Main.rand.NextFloat(-spread * 1.5f * projectile.direction)) * 6f * projectile.scale;
+                dust.noGravity = false;
             }
         }
 
@@ -171,32 +171,30 @@ namespace VadesContentMod.Projectiles
 
             for (int d = 0; d < 5; d++)
             {
-                int id = Dust.NewDust(target.Center, 5, 5, DustID.LifeDrain, 0, 0, 0, default, 2f);
-                Main.dust[id].fadeIn *= 0.3f;
+                Dust dust = Dust.NewDustDirect(target.Center, 5, 5, DustID.LifeDrain, Scale: 2f);
+                dust.fadeIn *= 0.3f;
             }
 
             for (int d = 0; d < 5; d++)
             {
-                int id = Dust.NewDust(target.Center, 5, 5, DustID.TopazBolt);
-                Main.dust[id].velocity *= 2f;
-                Main.dust[id].noGravity = false;
+                Dust dust = Dust.NewDustDirect(target.Center, 5, 5, DustID.TopazBolt);
+                dust.velocity *= 2f;
+                dust.noGravity = false;
             }
 
             if (Main.rand.NextBool(3))
             {
-                int id = Gore.NewGore(
+                Gore gore = Gore.NewGoreDirect(
                     target.Center,
                     Main.rand.NextVector2Circular(2f, 2f),
                     Main.rand.Next(GoreID.ChimneySmoke1, GoreID.ChimneySmoke2 + 1));
-                Main.gore[id].timeLeft = (int)(Main.gore[id].timeLeft * 0.7f);
+                gore.timeLeft = (int)(gore.timeLeft * 0.7f);
             }
 
-            int num = base.mod.BuffType("GodCurse");
-            if (target.buffImmune[num])
-            {
-                target.buffImmune[num] = false;
-            }
-            target.AddBuff(num, 2, false); // re-added this so that it can bypass the enemies with debuff immunities like the eidolon wyrm
+            int godCurse = ModContent.BuffType<Buffs.GodCurse>();
+
+            target.buffImmune[godCurse] = false;
+            target.AddBuff(godCurse, 2);
 
             if (Main.myPlayer == projectile.owner)
             {
@@ -217,7 +215,7 @@ namespace VadesContentMod.Projectiles
                         if (Main.rand.NextBool()) position.X *= -1f;
                     }
 
-                    position += Main.LocalPlayer.position;
+                    position += Main.player[projectile.owner].position;
 
                     Vector2 direction = Vector2.Normalize(target.Center - position);
                     float speed = 2f + i * 3f;

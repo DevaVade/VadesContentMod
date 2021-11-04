@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -10,113 +7,124 @@ using Terraria.ModLoader;
 namespace VadesContentMod.Projectiles.NPCs
 {
     public class Fort : ModProjectile
-	{
-		public override void SetStaticDefaults()
-		{
-			base.DisplayName.SetDefault("fard");
-		}
+    {
+        private readonly float projectileAcceleration = 16f;
+        private readonly float topSpeed = 32f;
+        private float distance;
 
-		public override void SetDefaults()
-		{
-			base.projectile.width = 40;
-			base.projectile.height = 40;
-			base.projectile.penetrate = -1;
-			base.projectile.ignoreWater = true;
-			base.projectile.tileCollide = false;
-			base.projectile.friendly = true;
-			base.projectile.magic = true;
-			base.projectile.timeLeft = 180;
-			ProjectileID.Sets.TrailCacheLength[base.projectile.type] = 10;
-			ProjectileID.Sets.TrailingMode[base.projectile.type] = 0;
-		}
+        public float MoveTimer
+        {
+            get => projectile.ai[0];
+            set => projectile.ai[0] = value;
+        }
 
-		public override void AI()
-		{
-			Projectile projectile = base.projectile;
-			projectile.velocity.X = projectile.velocity.X * 1.04f;
-			Projectile projectile2 = base.projectile;
-			projectile2.velocity.Y = projectile2.velocity.Y * 1.04f;
-			base.projectile.rotation = base.projectile.velocity.ToRotation() + MathHelper.ToRadians(90f);
-			this.timer++;
-			if (this.timer > 20)
-			{
-				for (int i = 0; i < 200; i++)
-				{
-					this.possibleTarget = Main.npc[i];
-					this.distance = (this.possibleTarget.Center - base.projectile.Center).Length();
-					if (this.distance < this.maxDistance && this.possibleTarget.active && !this.possibleTarget.dontTakeDamage && !this.possibleTarget.friendly && this.possibleTarget.chaseable && this.possibleTarget.lifeMax > 5 && !this.possibleTarget.immortal)
-					{
-						this.target = Main.npc[i];
-						this.foundTarget = true;
-						this.maxDistance = (this.target.Center - base.projectile.Center).Length();
-					}
-				}
-				if (this.foundTarget)
-				{
-					Vector2 direction2 = this.target.Center - base.projectile.Center;
-					direction2.Normalize();
-					direction2.X *= this.projectileAcceleration;
-					direction2.Y *= this.projectileAcceleration;
-					base.projectile.velocity += direction2;
-					if (base.projectile.velocity.Length() > this.topSpeed)
-					{
-						base.projectile.velocity = base.projectile.velocity.SafeNormalize(-Vector2.UnitY) * this.topSpeed;
-					}
-					if (!this.target.active)
-					{
-						this.foundTarget = false;
-					}
-				}
-			}
-			this.maxDistance = 500f;
-			Lighting.AddLight(base.projectile.Center, 1f, 0.1f, 0.1f);
-		}
+        public int CurrentTarget
+        {
+            get => (int)projectile.ai[1];
+            set => projectile.ai[1] = value;
+        }
 
-		public override Color? GetAlpha(Color lightColor)
-		{
-			return new Color?(new Color(214, 94, 106, base.projectile.alpha));
-		}
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("fard");
+        }
 
-		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
-		{
-			Vector2 drawOrigin = new Vector2((float)Main.projectileTexture[base.projectile.type].Width * 0.5f, (float)base.projectile.height * 0.5f);
-			for (int i = 0; i < base.projectile.oldPos.Length; i++)
-			{
-				Vector2 drawPos = base.projectile.oldPos[i] - Main.screenPosition + drawOrigin + new Vector2(0f, base.projectile.gfxOffY);
-				Color color = base.projectile.GetAlpha(lightColor) * ((float)(base.projectile.oldPos.Length - i) / (float)base.projectile.oldPos.Length);
-				spriteBatch.Draw(Main.projectileTexture[base.projectile.type], drawPos, new Rectangle?(new Rectangle(0, base.projectile.frame * Main.projectileTexture[base.projectile.type].Height / Main.projFrames[base.projectile.type], Main.projectileTexture[base.projectile.type].Width, Main.projectileTexture[base.projectile.type].Height / Main.projFrames[base.projectile.type])), color, base.projectile.rotation, drawOrigin, base.projectile.scale, SpriteEffects.None, 0f);
-			}
-			return true;
-		}
+        public override void SetDefaults()
+        {
+            projectile.width = 40;
+            projectile.height = 40;
+            projectile.penetrate = -1;
+            projectile.ignoreWater = true;
+            projectile.tileCollide = false;
+            projectile.friendly = true;
+            projectile.magic = true;
+            projectile.timeLeft = 180;
+            ProjectileID.Sets.TrailCacheLength[projectile.type] = 10;
+            ProjectileID.Sets.TrailingMode[projectile.type] = 0;
+        }
 
-		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
-		{
-			Main.PlaySound(mod.GetLegacySoundSlot(SoundType.Custom, "Sounds/Custom/Fard"));
-		}
+        public override void AI()
+        {
+            projectile.velocity *= 1.04f;
+            projectile.rotation = projectile.velocity.ToRotation() + MathHelper.PiOver2;
 
-		public override void Kill(int timeLeft)
-		{
-			Main.PlaySound(mod.GetLegacySoundSlot(SoundType.Custom, "Sounds/Custom/Boom"));
-		}
+            if (++MoveTimer > 20f)
+            {
+                if (CurrentTarget == -1)
+                {
+                    float currentDistance = -1;
 
-		private bool firstTick = true;
+                    for (int i = 0; i < Main.maxNPCs; i++)
+                    {
+                        NPC npc = Main.npc[i];
+                        distance = Vector2.Distance(npc.Center, projectile.Center);
 
-		private float direction;
+                        if ((currentDistance == -1 || distance < currentDistance) && npc.active && npc.CanBeChasedBy())
+                        {
+                            CurrentTarget = i;
+                            currentDistance = distance;
+                        }
+                    }
+                }
 
-		private float projectileAcceleration = 16f;
+                if (CurrentTarget != -1)
+                {
+                    NPC target = Main.npc[CurrentTarget];
 
-		private float topSpeed = 32f;
+                    projectile.velocity += Vector2.Normalize(target.Center - projectile.Center) * projectileAcceleration;
 
-		private int timer;
+                    if (projectile.velocity.Length() > topSpeed)
+                    {
+                        projectile.velocity = projectile.velocity.SafeNormalize(-Vector2.UnitY) * topSpeed;
+                    }
 
-		private NPC target;
+                    if (!target.active)
+                        CurrentTarget = -1;
+                }
+            }
 
-		private NPC possibleTarget;
+            Lighting.AddLight(projectile.Center, 1f, 0.1f, 0.1f);
+        }
 
-		private bool foundTarget;
+        public override Color? GetAlpha(Color lightColor) => new Color(214, 94, 106, projectile.alpha);
 
-		private float maxDistance = 500f;
+        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        {
+            Texture2D texture = Main.projectileTexture[projectile.type];
+            Vector2 drawOrigin = new Vector2(texture.Width / 2, projectile.height / 2);
 
-		private float distance;
-	}
+            for (int i = 0; i < projectile.oldPos.Length; i++)
+            {
+                Vector2 drawPos = projectile.oldPos[i] + drawOrigin + new Vector2(0f, projectile.gfxOffY);
+                Color color = projectile.GetAlpha(lightColor) * ((float)(projectile.oldPos.Length - i) / projectile.oldPos.Length);
+
+
+                spriteBatch.Draw(
+                    texture,
+                    drawPos - Main.screenPosition,
+                    new Rectangle(0,
+                    projectile.frame * texture.Height / Main.projFrames[projectile.type],
+                    texture.Width,
+                    texture.Height / Main.projFrames[projectile.type]),
+                    color,
+                    projectile.rotation,
+                    drawOrigin,
+                    projectile.scale,
+                    SpriteEffects.None,
+                    0f);
+            }
+
+            return true;
+        }
+
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            Main.PlaySound(mod.GetLegacySoundSlot(SoundType.Custom, "Sounds/Custom/Fard"), projectile.Center);
+        }
+
+        public override void Kill(int timeLeft)
+        {
+            Main.PlaySound(mod.GetLegacySoundSlot(SoundType.Custom, "Sounds/Custom/Boom"), projectile.Center);
+        }
+    }
 }
