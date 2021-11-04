@@ -18,8 +18,8 @@ namespace VadesContentMod.Buffs
         public override void Update(Player player, ref int buffIndex)
         {
             Mod calamity = ModLoader.GetMod("CalamityMod");
-            int rage = calamity != null ? calamity.BuffType("RageMode") : -1;
-            int adrenaline = calamity != null ? calamity.BuffType("AdrenalineMode") : -1;
+            int rage = calamity?.BuffType("RageMode") ?? -1;
+            int adrenaline = calamity?.BuffType("AdrenalineMode") ?? -1;
 
             for (int i = 0; i < BuffLoader.BuffCount; i++)
             {
