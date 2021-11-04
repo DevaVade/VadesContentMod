@@ -291,7 +291,8 @@ namespace VadesContentMod
             }
             else if (godGauntlet)
             {
-                target.AddBuff(mod.BuffType("GodCurse2"), 1000);
+                // TODO
+                //target.AddBuff(ModContent.BuffType<GodCurse2>(), 1000);
             }
         }
 
@@ -304,7 +305,8 @@ namespace VadesContentMod
             }
             else if (godGauntlet)
             {
-                target.AddBuff(mod.BuffType("GodCurse2"), 1000);
+                // TODO
+                //target.AddBuff(ModCOntent.BuffType<GodCurse2>(), 1000);
             }
         }
 
@@ -317,7 +319,8 @@ namespace VadesContentMod
             }
             else if (godGauntlet)
             {
-                target.AddBuff(mod.BuffType("GodCurse2"), 2);
+                // TODO
+                // target.AddBuff(ModContent.BuffType<GodCurse2>(), 2);
             }
         }
 
@@ -330,7 +333,8 @@ namespace VadesContentMod
             }
             else if (godGauntlet)
             {
-                target.AddBuff(mod.BuffType("GodCurse2"), 2);
+                // TODO
+                //target.AddBuff(ModContent.BuffType<GodCurse2>(), 2);
             }
         }
 
