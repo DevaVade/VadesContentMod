@@ -1,6 +1,6 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
@@ -45,6 +45,28 @@ namespace VadesContentMod.Items.Weapons
                 tt.text = "∞ damage";
             }
         }
+
+        public override void HoldItem(Player player)
+        {
+            int starsTotal = 6;
+            int lifeStar = ModContent.ProjectileType<LifeStar>();
+            if (Main.myPlayer != player.whoAmI || player.ownedProjectileCounts[lifeStar] >= starsTotal) return;
+
+            float separation = MathHelper.TwoPi / starsTotal;
+            for (int i = 0; i < starsTotal; i++)
+            {
+                float rotation = i * separation;
+                Projectile.NewProjectile(
+                    player.Center + rotation.ToRotationVector2() * 64f,
+                    Vector2.Zero,
+                    lifeStar,
+                    999999,
+                    100f,
+                    player.whoAmI,
+                    rotation, -1f);
+            }
+        }
+
         public override void UpdateInventory(Player player)
         {
             player.accWatch = 3;
@@ -75,7 +97,21 @@ namespace VadesContentMod.Items.Weapons
             player.findTreasure = true;
             player.noKnockback = true;
             player.thorns = 100f;
-            player.AddBuff(mod.BuffType("AntiDebuff"), 2);
+            player.AddBuff(ModContent.BuffType<Buffs.AntiDebuff>(), 2);
+
+            if (ModLoader.GetMod("CalamityMod") != null)
+            {
+                if (player.lifeRegen > 20)
+                {
+                    int num = player.lifeRegen - 20;
+                    player.lifeRegen = 20 + num * 2;
+                }
+                if (player.endurance > 0.3f)
+                {
+                    float num2 = player.endurance - 0.3f;
+                    player.endurance = 0.3f + num2 * 4f;
+                }
+            }
         }
 
         public override bool PreDrawTooltipLine(DrawableTooltipLine line, ref int yOffset)
