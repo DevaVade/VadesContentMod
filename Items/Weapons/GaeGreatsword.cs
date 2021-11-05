@@ -60,7 +60,7 @@ namespace VadesContentMod.Items.Weapons
                     player.Center + rotation.ToRotationVector2() * 64f,
                     Vector2.Zero,
                     lifeStar,
-                    999999,
+                    16969,
                     100f,
                     player.whoAmI,
                     rotation, -1f);
