@@ -239,23 +239,6 @@ namespace VadesContentMod
 
                 player.lifeRegenCount -= 4;
             }
-
-            if (this.godlikePower)
-            {
-                if (ModLoader.GetMod("CalamityMod") != null)
-                {
-                    if (player.lifeRegen > 20)
-                    {
-                        int num = player.lifeRegen - 20;
-                        player.lifeRegen = 20 + num * 2;
-                    }
-                    if (player.endurance > 0.3f)
-                    {
-                        float num2 = player.endurance - 0.3f;
-                        player.endurance = 0.3f + num2 * 4f;
-                    }
-                }
-            }
         }
 
         public override void PreUpdate()
