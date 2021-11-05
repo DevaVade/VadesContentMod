@@ -72,8 +72,6 @@ namespace VadesContentMod.Items.Armor
 
             player.armorPenetration += 15900;
 
-            player.meleeSpeed += .5f;
-
             player.longInvince = true;
             player.endurance += 500f;
             player.lavaImmune = true;
