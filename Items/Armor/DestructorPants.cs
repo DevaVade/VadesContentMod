@@ -10,7 +10,7 @@ namespace VadesContentMod.Items.Armor
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Leggings Of Dimensions");
-            Tooltip.SetDefault("90% increased damage and 70% increased critical strike chance, 60% increased movement and 90% increased melee speed.\nalso increases armor penetration to 1300.");
+            Tooltip.SetDefault("90% increased damage and 70% increased critical strike chance, 90% increased movement and 90% increased melee speed.\nalso increases armor penetration to 1300.");
             //add edgy and colored text yes pls
         }
 
@@ -36,7 +36,7 @@ namespace VadesContentMod.Items.Armor
             player.rangedCrit += critUp;
             player.magicCrit += critUp;
 
-            player.moveSpeed += 0.6f;
+            player.moveSpeed += 0.9f;
             player.meleeSpeed += 0.9f;
 
             player.armorPenetration += 1300;
