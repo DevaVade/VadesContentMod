@@ -88,5 +88,11 @@ namespace VadesContentMod.Items.Armor
             player.lavaImmune = true;
             player.noFallDmg = true;
         }
+
+        public override void ArmorSetShadows(Player player)
+        {
+            player.armorEffectDrawShadow = true;
+            player.armorEffectDrawOutlines = true;
+        }
     }
 }
