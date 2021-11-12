@@ -37,6 +37,19 @@ namespace VadesContentMod.Items.Weapons
             item.shootSpeed = 1;
         }
 
+        public override bool CanUseItem(Player player)
+        {
+            if (player.altFunctionUse != 2)
+            {
+                item.shoot = ModContent.ProjectileType<InfinitySlash>();
+            } else
+            {
+                item.shoot = ModContent.ProjectileType<InfinityBeam>();
+            }
+
+            return true;
+        }
+
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
             TooltipLine tt = tooltips.FirstOrDefault(x => x.Name == "Damage" && x.mod == "Terraria");
@@ -133,6 +146,8 @@ namespace VadesContentMod.Items.Weapons
 
             return true;
         }
+
+        public override bool AltFunctionUse(Player player) => true;
 
         public override Color? GetAlpha(Color lightColor) => Color.White;
     }
