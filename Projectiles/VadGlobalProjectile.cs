@@ -8,7 +8,7 @@ namespace VadesContentMod.Projectiles
         public override bool InstancePerEntity => true;
 
         private int counter = 0;
-        private bool firstTick = true;
+        public bool firstTick = true;
 
         public const int TimeFreezeMoveDuration = 10;
         public int TimeFrozen = 0;
@@ -36,9 +36,6 @@ namespace VadesContentMod.Projectiles
                 }
             }
 
-            if (firstTick)
-                firstTick = false;
-
             return doAI;
         }
 
@@ -50,6 +47,9 @@ namespace VadesContentMod.Projectiles
                 if (projectile.whoAmI == Main.player[projectile.owner].heldProj)
                     TimeFreezeImmune = true;
             }
+
+            if (firstTick)
+                firstTick = false;
         }
     }
 }
