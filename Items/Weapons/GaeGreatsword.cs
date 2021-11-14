@@ -16,7 +16,8 @@ namespace VadesContentMod.Items.Weapons
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("True Finality");
-            Tooltip.SetDefault("'It seems your journey has come to an end, join me then as we watch the sunset and after that we say goodbye so that i can reunite with her.' -before he faded\nThe final piece of your journey, now what shall you do?\nLore:\nAn Supposedly omnipotent god or a close friend has been defeated by the hands of a terrarian.\nBefore he draws his last breath, he gave you this gift with the intent of protecting you from any danger.\nEven if you can't talk to him anymore, his soul still within this blade with the other gods.");
+            Tooltip.SetDefault("Developer Cheat Item\nThe final blade of your journey.\nA blade that embodies not war and violence but a hope for those that are worthy.\nThe pure unfiltered infinite power of the blade that cuts timelines and omniverses out of existence.\nLeft click normally and oblitirate everything with one single slash, Right click to fire a infinity beam that will eviscerate anything touching it.\nLeft click and press UP to summon omniverse destroying entities by your side.");
+            //Edit the description if adding more attacks to this weapon
 
             Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(5, 20));
         }
