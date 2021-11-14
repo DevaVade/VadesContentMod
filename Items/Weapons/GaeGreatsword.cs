@@ -39,12 +39,73 @@ namespace VadesContentMod.Items.Weapons
 
         public override bool CanUseItem(Player player)
         {
+            item.useStyle = ItemUseStyleID.HoldingOut;
+            item.channel = true;
+            item.useTime = item.useAnimation = 0;
+            item.UseSound = SoundID.Item15;
+            item.buffType = 0;
+            item.melee = true;
+            item.summon = false;
+
             if (player.altFunctionUse != 2)
             {
-                item.shoot = ModContent.ProjectileType<InfinitySlash>();
+                if (player.controlUp)
+                {
+                    item.channel = false;
+                    item.useTime = item.useAnimation = 45;
+                    item.useStyle = ItemUseStyleID.SwingThrow;
+                    item.UseSound = SoundID.Item77;
+                    item.melee = false;
+                    item.summon = true;
+                    item.buffType = ModContent.BuffType<Buffs.Ouroboros>();
+                    item.shoot = ModContent.ProjectileType<OuroborosHead>();
+                } else
+                {
+                    item.shoot = ModContent.ProjectileType<InfinitySlash>();
+                }
             } else
             {
                 item.shoot = ModContent.ProjectileType<InfinityBeam>();
+            }
+
+            return true;
+        }
+
+        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        {
+            if (type == ModContent.ProjectileType<OuroborosHead>())
+            {
+                position = Main.MouseWorld;
+
+                if (player.ownedProjectileCounts[type] < 1)
+                {
+                    player.AddBuff(item.buffType, 2);
+
+                    Projectile.NewProjectile(
+                        position, 
+                        Vector2.Normalize(player.Center - position).RotatedByRandom(MathHelper.PiOver4) * 30f, 
+                        type, damage, knockBack, player.whoAmI, 
+                        -1, -1);
+
+                }
+
+                int dusts = 30;
+                for (int d = 0; d < dusts; d++)
+                {
+                    Dust dust = Dust.NewDustPerfect(position, DustID.LifeDrain, Scale: 5f);
+                    dust.noGravity = true;
+                    dust.velocity = Vector2.UnitY.RotatedBy(MathHelper.TwoPi / dusts * d) * 12f;
+                }
+
+                for (int d = 0; d < 10; d++)
+                {
+                    Dust dust = Dust.NewDustPerfect(position, DustID.TopazBolt, Scale: 2f);
+                    dust.velocity *= 2.5f;
+                }
+
+                Lighting.AddLight(position, Color.Red.ToVector3());
+
+                return false;
             }
 
             return true;
