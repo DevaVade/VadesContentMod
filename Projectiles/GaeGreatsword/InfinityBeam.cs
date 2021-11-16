@@ -1,4 +1,5 @@
-﻿using System;
+﻿using VadesContentMod.Helpers;
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -9,6 +10,8 @@ namespace VadesContentMod.Projectiles.GaeGreatsword
 {
     public class InfinityBeam : ModProjectile
     {
+        public override string Texture => "Terraria/Projectile_" + ProjectileID.None;
+
         public const float MaxCharge = 90f;
         public const int StepLength = 256;
         public readonly int Steps = 2;
@@ -31,11 +34,11 @@ namespace VadesContentMod.Projectiles.GaeGreatsword
 
         public override void SetDefaults()
         {
+            projectile.width = 256;
             projectile.friendly = true;
             projectile.melee = true;
             projectile.tileCollide = false;
             projectile.penetrate = -1;
-            projectile.scale = 4f;
             projectile.usesLocalNPCImmunity = true;
             projectile.localNPCHitCooldown = 1;
             projectile.GetGlobalProjectile<VadGlobalProjectile>().TimeFreezeImmune = true;
@@ -138,27 +141,65 @@ namespace VadesContentMod.Projectiles.GaeGreatsword
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-            if (IsCharged)
+            if (!IsCharged) return false;
+
+            Color BeamColor = projectile.GetAlpha(lightColor);
+
+            // texture used for flash
+            Texture2D texture = mod.GetTexture("Textures/Circle");
+            // make the beam slightly change scale with time
+            float mult = (1.1f + (float)Math.Sin(Main.GlobalTime * 2) * 0.1f);
+            // base scale for the flash so it actually connects with beam
+            float scale = projectile.scale * 2 * mult;
+            // draw flash
+            for (int i = 0; i < 10; i++)
             {
-                Texture2D texture = Main.projectileTexture[projectile.type];
-
-                Color color = projectile.GetAlpha(lightColor);
-                Vector2 origin = new Vector2(0, texture.Height / 2);
-
-                for (int i = 0; i < Steps; i++)
-                {
-                    spriteBatch.Draw(
-                        texture,
-                        projectile.position + (projectile.velocity * StepLength * projectile.scale * i) - Main.screenPosition,
-                        null,
-                        color,
-                        projectile.rotation,
-                        origin,
-                        projectile.scale,
-                        SpriteEffects.None,
-                        0f);
-                }
+                Main.spriteBatch.Draw(
+                    texture, 
+                    projectile.position - Main.screenPosition, 
+                    null, 
+                    BeamColor * 0.1f * (10f - i), 
+                    0f, 
+                    texture.Size() / 2, 
+                    scale * (i / 10f), 
+                    SpriteEffects.None, 
+                    0f);
             }
+
+            PrimitivePacket packet = new PrimitivePacket() { Pass = "Texture" };
+
+            Vector2 start = projectile.position;
+            Vector2 end = projectile.position + projectile.velocity * Steps * StepLength * projectile.scale;
+            float width = projectile.width * projectile.scale;
+
+            // offset so i can make the triangles
+            Vector2 offset = (start - end).SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.PiOver2) * width;
+            PrimitivePacket.SetTexture(0, mod.GetTexture("Textures/Flames"));
+            float off = -Main.GlobalTime % 1;
+
+            // draw the flame part of the beam
+            packet.Add(start + offset * mult, BeamColor * 0.4f, new Vector2(0 + off, 0));
+            packet.Add(start - offset * mult, BeamColor * 0.4f, new Vector2(0 + off, 1));
+            packet.Add(end + offset * mult, BeamColor * 0.4f, new Vector2(1 + off, 0));
+
+            packet.Add(start - offset * mult, BeamColor * 0.4f, new Vector2(0 + off, 1));
+            packet.Add(end - offset * mult, BeamColor * 0.4f, new Vector2(1 + off, 1));
+            packet.Add(end + offset * mult, BeamColor * 0.4f, new Vector2(1 + off, 0));
+            packet.Send();
+
+            PrimitivePacket packet2 = new PrimitivePacket() { Pass = "Texture" };
+
+            PrimitivePacket.SetTexture(0, mod.GetTexture("Textures/Trail1"));
+
+            // draw the main part of the beam
+            packet2.Add(start + offset * 2 * mult, BeamColor, Vector2.Zero);
+            packet2.Add(start - offset * 2 * mult, BeamColor, Vector2.UnitY);
+            packet2.Add(end + offset * 2 * mult, BeamColor, Vector2.UnitX);
+
+            packet2.Add(start - offset * 2 * mult, BeamColor, Vector2.UnitY);
+            packet2.Add(end - offset * 2 * mult, BeamColor, Vector2.One);
+            packet2.Add(end + offset * 2 * mult, BeamColor, Vector2.UnitX);
+            packet2.Send();
 
             return false;
         }

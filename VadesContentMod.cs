@@ -9,6 +9,7 @@ namespace VadesContentMod
 {
     public class VadesContentMod : Mod
     {
+        public static Effect TrailEffect;
         public static ModHotKey OneShothotKey;
 
         internal bool ThoriumLoaded;
@@ -26,19 +27,20 @@ namespace VadesContentMod
 
             if (Main.netMode != NetmodeID.Server)
             {
-                Ref<Effect> invertRef = new Ref<Effect>(GetEffect("Effects/Grayscale"));
-                Filters.Scene["VadesContentMod:Grayscale"] = new Filter(new ScreenShaderData(invertRef, "Main"), EffectPriority.VeryHigh);
-                Filters.Scene["VadesContentMod:Grayscale"].Load();
+                TrailEffect = GetEffect("Effects/TrailShader");
 
+                Ref<Effect> invertRef = new Ref<Effect>(GetEffect("Effects/Grayscale"));
                 Ref<Effect> shockwaveRef = new Ref<Effect>(GetEffect("Effects/Shockwave"));
+
+                Filters.Scene["VadesContentMod:Grayscale"] = new Filter(new ScreenShaderData(invertRef, "Main"), EffectPriority.VeryHigh);
                 Filters.Scene["VadesContentMod:Shockwave"] = new Filter(new ScreenShaderData(shockwaveRef, "Shockwave"), EffectPriority.VeryHigh);
-                Filters.Scene["VadesContentMod:Shockwave"].Load();
             }
         }
 
         public override void Unload()
         {
             OneShothotKey = null;
+            TrailEffect = null;
         }
 
         public override void PostSetupContent()
