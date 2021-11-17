@@ -3,5 +3,5 @@ author = DevaVade and the bois
 version = 0.1
 hideCode = true
 hideResources = true
-weakReferences = Fargowiltas@2.4, FargowiltasSouls@1.3.96.3, CalamityMod@1.4.5.7
+weakReferences = Fargowiltas@2.4, FargowiltasSouls@1.3.96.3, CalamityMod@1.5.0.1
 homepage = https://discord.gg/EcXUkASV5x
