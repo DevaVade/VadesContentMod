@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Reflection;
 using System.Collections.Generic;
 using Terraria;
 
@@ -8,33 +9,17 @@ namespace VadesContentMod.Helpers
 {
     public class PrimitivePacket
     {
-        public List<VertexPositionColorTexture> Vertices = new List<VertexPositionColorTexture>();
-        public PrimitiveType Type = PrimitiveType.TriangleList;
-        public Effect Effect = VadesContentMod.TrailEffect;
-        public string Pass = "Basic";
+        public readonly List<VertexPositionColorTexture> Vertices = new List<VertexPositionColorTexture>();
+        public readonly PrimitiveType Type = PrimitiveType.TriangleList;
+        public readonly Texture Texture;
+        public readonly Effect Effect;
+        public readonly string Pass;
 
-        public int Count
+        public PrimitivePacket(Texture2D texture, string pass, Effect specialEffect = null)
         {
-            get
-            {
-                int count = 0;
-                switch (Type)
-                {
-                    case PrimitiveType.LineList:
-                        count = Vertices.Count / 2;
-                        break;
-                    case PrimitiveType.LineStrip:
-                        count = Vertices.Count - 1;
-                        break;
-                    case PrimitiveType.TriangleList:
-                        count = Vertices.Count / 3;
-                        break;
-                    case PrimitiveType.TriangleStrip:
-                        count = Vertices.Count - 2;
-                        break;
-                }
-                return count;
-            }
+            Texture = texture;
+            Pass = pass;
+            Effect = specialEffect ?? VadesContentMod.TrailEffect;
         }
 
         public void Add(Vector2 position, Color color, Vector2 TexCoord)
@@ -65,102 +50,36 @@ namespace VadesContentMod.Helpers
             Add(pos1 - offset1, color1, new Vector2(progress1, 0));
         }
 
-        public static void SetTexture(int index, Texture2D texture)
-        {
-            Main.graphics.GraphicsDevice.Textures[index] = texture;
-            Main.graphics.GraphicsDevice.SamplerStates[index] = SamplerState.LinearWrap;
-        }
-
-        public short[] GetIndices()
-        {
-            short[] indexes = new short[1];
-            int count = Vertices.Count - 1;
-            switch (Type)
-            {
-                case PrimitiveType.TriangleList:
-                    int IPV = 3; // indexes per vertex
-                    int length = count * IPV; // length of index array
-
-                    if (indexes.Length < length)
-                        Array.Resize(ref indexes, length);
-
-                    for (short i = 0; i < count; i = (short)(i + 1))
-                    {
-                        short indexInArray = (short)(i * IPV);
-                        int num = i * 2;
-                        indexes[indexInArray] = (short)num; // resuming: connect first one
-                        indexes[indexInArray + 1] = (short)(num + 1); // to second one
-                        indexes[indexInArray + 2] = (short)(num + 2); // then to third one
-                    }
-                    break;
-                case PrimitiveType.TriangleStrip:
-                    int IPV1 = 2;
-                    int length1 = count * IPV1;
-
-                    if (indexes.Length < length1)
-                        Array.Resize(ref indexes, length1);
-
-                    for (short i = 0; i < count; i = (short)(i + 1))
-                    {
-                        short indexInArray = (short)(i * IPV1);
-                        int num = i * 2;
-                        indexes[indexInArray] = (short)num; // connect first one
-                        indexes[indexInArray] = (short)(num + 1); // to second one
-                    }
-                    break;
-                case PrimitiveType.LineList:
-                    int IPV2 = 2;
-                    int length2 = count * IPV2;
-
-                    if (indexes.Length < length2)
-                        Array.Resize(ref indexes, length2);
-
-                    for (short i = 0; i < count; i = (short)(i + 1))
-                    {
-                        short indexInArray = (short)(i * IPV2);
-                        int num = i * 2;
-                        indexes[indexInArray] = (short)num; // connect first
-                        indexes[indexInArray] = (short)(num + 1); // to second
-                    }
-                    break;
-                case PrimitiveType.LineStrip:
-                    for (short i = 0; i < count; i = (short)(i + 1))
-                    {
-                        short indexInArray = i;
-                        int num = i * 2;
-                        indexes[indexInArray] = (short)num;
-                    }
-                    break;
-            }
-
-            return indexes;
-        }
-
-        public void Send()
+        public void Send(SpriteBatch spriteBatch)
         {
             GraphicsDevice device = Main.graphics.GraphicsDevice;
 
-            if (Count > 0)
+            if (Vertices.Count >= 3)
             {
-                VertexBuffer buffer = new VertexBuffer(device, typeof(VertexPositionColorTexture), Vertices.Count, BufferUsage.WriteOnly);
-                IndexBuffer index = new IndexBuffer(device, typeof(short), GetIndices().Length, BufferUsage.WriteOnly);
+                // Save current spriteBatch state
+                SpriteSortMode sortMode = SpriteSortMode.Deferred;
+                SamplerState samplerState = (SamplerState)spriteBatch.GetType().GetField("samplerState", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch);
+                DepthStencilState depthStencilState = (DepthStencilState)spriteBatch.GetType().GetField("depthStencilState", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch);
+                RasterizerState rasterizerState = (RasterizerState)spriteBatch.GetType().GetField("rasterizerState", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch);
+                Effect effect = (Effect)spriteBatch.GetType().GetField("customEffect", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch);
+                Matrix matrix = (Matrix)spriteBatch.GetType().GetField("transformMatrix", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch);
 
-                device.SetVertexBuffer(null);
+                spriteBatch.End();
 
-                buffer.SetData(Vertices.ToArray());
-                index.SetData(GetIndices());
+                device.Textures[0] = Texture;
+                device.SamplerStates[0] = SamplerState.LinearWrap;
 
-                device.SetVertexBuffer(buffer);
-                device.Indices = index;
+                device.RasterizerState = RasterizerState.CullNone;
 
-                RasterizerState rasterizerState = new RasterizerState();
-                rasterizerState.CullMode = CullMode.None;
-                device.RasterizerState = rasterizerState;
+                VertexPositionColorTexture[] vertices = Vertices.ToArray();
 
                 Effect.Parameters["WVP"].SetValue(PrimitiveHelper.GetMatrix());
                 Effect.CurrentTechnique.Passes[Pass].Apply();
 
-                device.DrawPrimitives(Type, 0, Count);
+                device.DrawUserPrimitives(PrimitiveType.TriangleList, vertices, 0, vertices.Length / 3);
+
+                // Load previous spriteBatch state
+                spriteBatch.Begin(sortMode, default, samplerState, depthStencilState, rasterizerState, effect, matrix);
             }
         }
     }

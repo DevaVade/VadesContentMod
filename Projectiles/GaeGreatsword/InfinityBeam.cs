@@ -14,7 +14,7 @@ namespace VadesContentMod.Projectiles.GaeGreatsword
 
         public const float MaxCharge = 90f;
         public const int StepLength = 256;
-        public readonly int Steps = 2;
+        public readonly int Steps = 20;
 
         private bool playSound = true;
 
@@ -34,7 +34,7 @@ namespace VadesContentMod.Projectiles.GaeGreatsword
 
         public override void SetDefaults()
         {
-            projectile.width = 256;
+            projectile.width = 128;
             projectile.friendly = true;
             projectile.melee = true;
             projectile.tileCollide = false;
@@ -145,66 +145,70 @@ namespace VadesContentMod.Projectiles.GaeGreatsword
 
             Color BeamColor = projectile.GetAlpha(lightColor);
 
-            // texture used for flash
             Texture2D texture = mod.GetTexture("Textures/Circle");
-            // make the beam slightly change scale with time
-            float mult = (1.1f + (float)Math.Sin(Main.GlobalTime * 2) * 0.1f);
-            // base scale for the flash so it actually connects with beam
-            float scale = projectile.scale * 2 * mult;
-            // draw flash
+            float extraScale = 1.1f + (float)Math.Sin(Main.GlobalTime * 2) * 0.1f;
+            float scale = projectile.scale * 2 * extraScale;
+            
             for (int i = 0; i < 10; i++)
             {
                 Main.spriteBatch.Draw(
-                    texture, 
-                    projectile.position - Main.screenPosition, 
-                    null, 
-                    BeamColor * 0.1f * (10f - i), 
-                    0f, 
-                    texture.Size() / 2, 
-                    scale * (i / 10f), 
-                    SpriteEffects.None, 
+                    texture,
+                    projectile.position - Main.screenPosition,
+                    null,
+                    BeamColor * 0.1f * (10f - i),
+                    0f,
+                    texture.Size() / 2,
+                    scale * (i / 10f),
+                    SpriteEffects.None,
                     0f);
             }
 
-            PrimitivePacket packet = new PrimitivePacket() { Pass = "Texture" };
-
             Vector2 start = projectile.position;
-            Vector2 end = projectile.position + projectile.velocity * Steps * StepLength * projectile.scale;
-            float width = projectile.width * projectile.scale;
+            Vector2 end = start + projectile.velocity * Steps * StepLength * projectile.scale;
+            float width = projectile.width * projectile.scale * 0.7f;
 
-            // offset so i can make the triangles
-            Vector2 offset = (start - end).SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.PiOver2) * width;
-            PrimitivePacket.SetTexture(0, mod.GetTexture("Textures/Flames"));
-            float off = -Main.GlobalTime % 1;
+            Vector2 normal = (start - end).SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.PiOver2) * width;
+            float timeOffset = (-Main.GlobalTime * 6f) % 1;
 
-            // draw the flame part of the beam
-            packet.Add(start + offset * mult, BeamColor * 0.4f, new Vector2(0 + off, 0));
-            packet.Add(start - offset * mult, BeamColor * 0.4f, new Vector2(0 + off, 1));
-            packet.Add(end + offset * mult, BeamColor * 0.4f, new Vector2(1 + off, 0));
+            PrimitivePacket packet;
 
-            packet.Add(start - offset * mult, BeamColor * 0.4f, new Vector2(0 + off, 1));
-            packet.Add(end - offset * mult, BeamColor * 0.4f, new Vector2(1 + off, 1));
-            packet.Add(end + offset * mult, BeamColor * 0.4f, new Vector2(1 + off, 0));
-            packet.Send();
+            // Flame
+            for (int step = 0; step < Steps; step++)
+            {
+                Vector2 flameStart = start + projectile.velocity * StepLength * step;
+                Vector2 flameEnd = flameStart + projectile.velocity * StepLength;
 
-            PrimitivePacket packet2 = new PrimitivePacket() { Pass = "Texture" };
+                packet = new PrimitivePacket(mod.GetTexture("Textures/Flames"), "Texture");
 
-            PrimitivePacket.SetTexture(0, mod.GetTexture("Textures/Trail1"));
+                packet.Add(flameStart + normal * extraScale, BeamColor * 0.4f, new Vector2(timeOffset, 0f));
+                packet.Add(flameStart - normal * extraScale, BeamColor * 0.4f, new Vector2(timeOffset, 1f));
+                packet.Add(flameEnd + normal * extraScale, BeamColor * 0.4f, new Vector2(1 + timeOffset, 0f));
 
-            // draw the main part of the beam
-            packet2.Add(start + offset * 2 * mult, BeamColor, Vector2.Zero);
-            packet2.Add(start - offset * 2 * mult, BeamColor, Vector2.UnitY);
-            packet2.Add(end + offset * 2 * mult, BeamColor, Vector2.UnitX);
+                packet.Add(flameStart - normal * extraScale, BeamColor * 0.4f, new Vector2(timeOffset, 1f));
+                packet.Add(flameEnd - normal * extraScale, BeamColor * 0.4f, new Vector2(1 + timeOffset, 1f));
+                packet.Add(flameEnd + normal * extraScale, BeamColor * 0.4f, new Vector2(1 + timeOffset, 0f));
 
-            packet2.Add(start - offset * 2 * mult, BeamColor, Vector2.UnitY);
-            packet2.Add(end - offset * 2 * mult, BeamColor, Vector2.One);
-            packet2.Add(end + offset * 2 * mult, BeamColor, Vector2.UnitX);
-            packet2.Send();
+                packet.Send(spriteBatch);
+            }
+
+            // Main laser
+            normal *= 1f;
+            packet = new PrimitivePacket(mod.GetTexture("Textures/Trail1"), "Texture");
+
+            packet.Add(start + normal * 2 * extraScale, BeamColor, Vector2.Zero);
+            packet.Add(start - normal * 2 * extraScale, BeamColor, Vector2.UnitY);
+            packet.Add(end + normal * 2 * extraScale, BeamColor, Vector2.UnitX);
+
+            packet.Add(start - normal * 2 * extraScale, BeamColor, Vector2.UnitY);
+            packet.Add(end - normal * 2 * extraScale, BeamColor, Vector2.One);
+            packet.Add(end + normal * 2 * extraScale, BeamColor, Vector2.UnitX);
+
+            packet.Send(spriteBatch);
 
             return false;
         }
 
-        public override Color? GetAlpha(Color lightColor) => Color.Lerp(Color.Red, Color.Yellow, ((float)Math.Sin(ColorTimer * 0.05f) + 1f) / 2f);
+        public override Color? GetAlpha(Color lightColor) => Main.hslToRgb(Main.GlobalTime * 0.4f % 1f, 1f, 0.6f);
 
         public override bool ShouldUpdatePosition() => false;
     }
