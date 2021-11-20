@@ -217,14 +217,14 @@ namespace VadesContentMod
             {
                 if (player.lifeRegen > 0)
                     player.lifeRegen = 0;
-                player.lifeRegen -= 1700;
+                player.lifeRegen -= 666;
 
                 player.lifeRegenTime = 0;
 
                 if (player.lifeRegenCount > 0)
                     player.lifeRegenCount = 0;
 
-                player.lifeRegenCount -= 60000;
+                player.lifeRegenCount -= 666;
             }
 
             if (evil)

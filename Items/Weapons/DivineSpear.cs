@@ -10,7 +10,7 @@ namespace VadesContentMod.Items.Weapons
         {
             item.width = 106;
             item.height = 106;
-            item.damage = 69420;
+            item.damage = 2000;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noUseGraphic = true;
             item.useAnimation = item.useTime = 28;

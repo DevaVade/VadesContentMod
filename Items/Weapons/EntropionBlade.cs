@@ -19,7 +19,7 @@ namespace VadesContentMod.Items.Weapons
 
 		public override void SetDefaults() 
 		{
-			item.damage = 55000;
+			item.damage = 5500;
 			item.melee = true;
 			item.width = 180;
 			item.height = 278;

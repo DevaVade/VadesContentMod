@@ -191,7 +191,7 @@ namespace VadesContentMod.Projectiles
                 gore.timeLeft = (int)(gore.timeLeft * 0.7f);
             }
 
-            int godCurse = ModContent.BuffType<Buffs.GodCurse>();
+            int godCurse = ModContent.BuffType<Buffs.GodCurse2>();
 
             target.buffImmune[godCurse] = false;
             target.AddBuff(godCurse, 2);
