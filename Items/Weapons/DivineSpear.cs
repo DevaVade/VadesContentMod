@@ -6,11 +6,17 @@ namespace VadesContentMod.Items.Weapons
 {
     public class DivineSpear : ModItem
     {
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("The Trishuna");
+            Tooltip.SetDefault("'Only trustworthy commanders of vade's army has ever wielded this weapon.'");
+        }
+
         public override void SetDefaults()
         {
             item.width = 106;
             item.height = 106;
-            item.damage = 2000;
+            item.damage = 2100;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noUseGraphic = true;
             item.useAnimation = item.useTime = 28;

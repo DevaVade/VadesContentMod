@@ -11,15 +11,15 @@ namespace VadesContentMod.Items.Weapons
 	{
 		public override void SetStaticDefaults() 
 		{
-			DisplayName.SetDefault("Entropion Blade");
-			Tooltip.SetDefault("'The grandfather of all blades'");
+			DisplayName.SetDefault("Divine Azathoth");
+			Tooltip.SetDefault("'A blade sent from the fabric of reality that slays all who oppose.'");
 
 			Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(5, 10));
 		}
 
 		public override void SetDefaults() 
 		{
-			item.damage = 5500;
+			item.damage = 6900;
 			item.melee = true;
 			item.width = 180;
 			item.height = 278;
