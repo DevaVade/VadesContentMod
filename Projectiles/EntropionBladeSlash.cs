@@ -194,7 +194,7 @@ namespace VadesContentMod.Projectiles
             int godCurse = ModContent.BuffType<Buffs.GodCurse2>();
 
             target.buffImmune[godCurse] = false;
-            target.AddBuff(godCurse, 2);
+            target.AddBuff(godCurse, 8);
 
             if (Main.myPlayer == projectile.owner)
             {
