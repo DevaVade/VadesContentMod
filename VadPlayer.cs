@@ -18,11 +18,15 @@ namespace VadesContentMod
         public bool FreezeTime = false;
         public int freezeLength = 180;
 
+        public float entroDamageBonus = 0;
+        public int entroDamageTimer = 0;
+
         public int screenShake = 0;
 
         public int shockwaveTime = -1;
 
         public bool destructorSet;
+        public bool entroSet;
 
         public bool reviveCooldown;
         public bool reviveBuff;
@@ -47,6 +51,7 @@ namespace VadesContentMod
             reviveBuff = false;
             reviveCooldown = false;
             destructorSet = false;
+            entroSet = false;
             oneShotCooldown = false;
             oneShot = false;
             godlikePower = false;
@@ -72,6 +77,8 @@ namespace VadesContentMod
 
         public override void PostUpdateMiscEffects()
         {
+            UpdateEntroDamage();
+
             if (screenShake > 0) screenShake--;
 
             if (godCurse)
@@ -267,6 +274,8 @@ namespace VadesContentMod
 
         public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
         {
+            if (entroSet && item.melee) AddEntroDamage();
+
             if (oneShot)
             {
                 target.life = 1;
@@ -281,6 +290,8 @@ namespace VadesContentMod
 
         public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
         {
+            if (entroSet && proj.melee) AddEntroDamage();
+
             if (oneShot)
             {
                 target.life = 1;
@@ -409,6 +420,28 @@ namespace VadesContentMod
                 float shakeValue = screenShake;
                 Main.screenPosition.X += Main.rand.NextFloat(-shakeValue, shakeValue);
                 Main.screenPosition.Y += Main.rand.NextFloat(-shakeValue, shakeValue);
+            }
+        }
+
+        private void AddEntroDamage()
+        {
+            entroDamageBonus = MathHelper.Min(entroDamageBonus + 0.02f, 0.6f);
+            entroDamageTimer = 120;
+        }
+
+        private void UpdateEntroDamage()
+        {
+            if (entroSet)
+            {
+                if (--entroDamageTimer <= 0)
+                {
+                    entroDamageTimer = 0;
+                    entroDamageBonus = MathHelper.Max(entroDamageBonus - 0.001f, 0f);
+                }
+            } else
+            {
+                entroDamageTimer = 0;
+                entroDamageBonus = 0f;
             }
         }
     }

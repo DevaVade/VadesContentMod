@@ -1,11 +1,13 @@
-yeah add entropion armor it should have 110 def for head and same for the leggings 
-and 130 def for the chestplate
-overall damage increase for this set should be lower than the luminant but its for melee only
-and 10% DR for each piece for this and a 10% for the set bonus
+[DONE] yeah add entropion armor it should have 110 def for head and same for the leggings and 130 def for the chestplate
+
+
+[DONE] overall damage increase for this set should be lower than the luminant but its for melee only
+[DONE] and 10% DR for each piece for this and a 10% for the set bonus
+
 also set bonus:
-everytime you hit enemies with a melee weapon dmg increases by 5%
-caps at 60%
-this decreases when using other classes or overtime not attacking(decreases around 20 seconds when not attacking)
+[DONE - made increase 2% because too op] everytime you hit enemies with a melee weapon dmg increases by 5%
+[DONE] caps at 60%
+[DONE - made decrease take 10 seconds because balancing] this decreases when using other classes or overtime not attacking(decreases around 20 seconds when not attacking)
 
 
 also entropion wings are as fast as the celestial starboard but not faster then the wrings
