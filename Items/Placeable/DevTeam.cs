@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace VadesContentMod.Items.Placeable
 {
-    class PeakEvolution : ModItem
+    public class DevTeam : ModItem
     {
         public override void SetStaticDefaults()
         {
