@@ -1,4 +1,4 @@
 Too busy to replace the sprites rn so yeah
 sorry for the trouble pls
 to do:
-replace the entro head and chestpiece item sprite with the old omni item sprites and replace the old omni sprites with the new one
+replace the old entro sprites with the old omni set sprites and replace the old mni sprites with the new one
