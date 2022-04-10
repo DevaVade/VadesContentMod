@@ -1,7 +1,6 @@
 displayName = Infinite Realities Mod
-author = DevaVade and the bois
+author = DevaVade and the others
 version = 0.1
 hideCode = true
 hideResources = true
-weakReferences = Fargowiltas@2.4, FargowiltasSouls@1.3.96.3, CalamityMod@1.5.0.1
 homepage = https://discord.gg/EcXUkASV5x
