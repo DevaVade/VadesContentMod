@@ -6,6 +6,11 @@ ver 0.1
 (insert mod description xd)
 
 cringe
-Coders:
+
+Code credits:
 *ElcholoGamer#8225
 *Woodio#9941
+*The epic woman with the code (change it later to my discord tag!!!!)
+
+Sprite credits:
+*I don't fucking know lmao
