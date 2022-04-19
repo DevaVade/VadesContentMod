@@ -23,7 +23,7 @@ namespace VadesContentMod
         }
 
         public static Effect TrailEffect;
-        public static ModHotKey OneShothotKey;
+        public static ModKeybind OneShothotKey;
         public Mod HerosMod;
         public const string HeroPerm = "VadesContentMod";
         public const string HeroPermDisplayName = "Infinite Realities";
@@ -45,15 +45,15 @@ namespace VadesContentMod
         {
             instance = this;
             
-            OneShothotKey = RegisterHotKey("Destructor Armor One-Shot", "F");
+            OneShothotKey = KeybindLoader.RegisterKeybind(instance, "Destructor Armor One-Shot", "F");
 
             HerosMod = ModLoader.GetMod("HEROsMod");
             if (Main.netMode != NetmodeID.Server)
             {
-                TrailEffect = GetEffect("Effects/TrailShader");
+                TrailEffect = ModContent.Request<Effect>("Effects/TrailShader").Value;
 
-                Ref<Effect> invertRef = new Ref<Effect>(GetEffect("Effects/Grayscale"));
-                Ref<Effect> shockwaveRef = new Ref<Effect>(GetEffect("Effects/Shockwave"));
+                Ref<Effect> invertRef = new Ref<Effect>(ModContent.Request<Effect>("Effects/Grayscale").Value);
+                Ref<Effect> shockwaveRef = new Ref<Effect>(ModContent.Request<Effect>("Effects/Shockwave").Value);
 
                 Filters.Scene["VadesContentMod:Grayscale"] = new Filter(new ScreenShaderData(invertRef, "Main"), EffectPriority.VeryHigh);
                 Filters.Scene["VadesContentMod:Shockwave"] = new Filter(new ScreenShaderData(shockwaveRef, "Shockwave"), EffectPriority.VeryHigh);
@@ -71,6 +71,8 @@ namespace VadesContentMod
             currentDate = dateTime.ToString("dd/MM/yyyy");
             day = dateTime.Day;
             month = dateTime.Month;
+
+            //MusicLoader.AddMusicBox(VadesContentMod.instance, MusicLoader.GetMusicSlot(VadesContentMod.instance, "pathname"), ModContent.ItemType<musicBoxItem>(), ModContent.TileType<placedMusicVBox>());
         }
 
         public override void Unload()
@@ -137,18 +139,6 @@ namespace VadesContentMod
                     Logger.WarnFormat("Infinite Realities: Unknown Message Type: {0}", messageType);
                     break;
             }
-        }
-        public override void UpdateMusic(ref int music, ref MusicPriority priority)
-        {
-            if (Main.myPlayer == -1 || Main.gameMenu || !Main.LocalPlayer.active)
-            {
-                return;
-            }
-            /*if (Main.LocalPlayer.GetModPlayer<VadePlayer>().Biome)
-            {
-                music = GetSoundSlot(SoundType.Music, "Sounds/Music/We don't have any music !!!");
-                priority = MusicPriority.Environment;
-            }*/
         }
 
         public override void AddRecipeGroups()
