@@ -9,7 +9,7 @@ namespace VadesContentMod.Tiles
 {
     public class DevTeam : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             Main.tileLavaDeath[Type] = true;
@@ -26,16 +26,16 @@ namespace VadesContentMod.Tiles
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.addTile(Type);
 
-            disableSmartCursor = true;
+            TileID.Sets.DisableSmartCursor[Type] = true;
 
             ModTranslation name = CreateMapEntryName();
             name.SetDefault("Painting");
             AddMapEntry(new Color(99, 50, 30), name);
         }
 
-        public override void KillMultiTile(int i, int j, int frameX, int frameY)
+        /*public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
             Item.NewItem(i * 16, j * 16, 48, 48, ModContent.ItemType<Items.Placeable.DevTeam>());
-        }
+        }*/
     }
 }

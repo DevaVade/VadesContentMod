@@ -1,9 +1,11 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria.Audio;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.GameContent;
 
 namespace VadesContentMod.Projectiles
 {
@@ -13,31 +15,31 @@ namespace VadesContentMod.Projectiles
 
         public override void SetDefaults()
         {
-            projectile.width = projectile.height = 12;
-            projectile.friendly = true;
-            projectile.ranged = true;
-            projectile.extraUpdates = 3;
+            Projectile.width = Projectile.height = 12;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.extraUpdates = 3;
         }
 
         public override void AI()
         {
-            if (projectile.ai[0] == 0f)
+            if (Projectile.ai[0] == 0f)
             {
-                projectile.ai[0] = 1f;
+                Projectile.ai[0] = 1f;
 
-                projectile.velocity *= 0.5f;
+                Projectile.velocity *= 0.5f;
 
                 float maxSpeed = 10f;
-                float speed = projectile.velocity.Length();
+                float speed = Projectile.velocity.Length();
                 if (speed > maxSpeed)
-                    projectile.velocity *= maxSpeed / speed;
+                    Projectile.velocity *= maxSpeed / speed;
             }
 
             
             {
-                Dust dust = Dust.NewDustDirect(projectile.position, projectile.width, projectile.height, DustID.LifeDrain, Scale: 1.5f);
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.LifeDrain, Scale: 1.5f);
 
-                Vector2 direction = Vector2.Normalize(projectile.velocity).RotatedBy(MathHelper.PiOver2);
+                Vector2 direction = Vector2.Normalize(Projectile.velocity).RotatedBy(MathHelper.PiOver2);
                 if (Main.rand.NextBool())
                     direction *= -1f;
 
@@ -46,35 +48,35 @@ namespace VadesContentMod.Projectiles
             }
 
             if (Main.rand.NextBool(12)){
-                Dust dust = Dust.NewDustDirect(projectile.position, projectile.width, projectile.height, DustID.TopazBolt, Scale: 1f);
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.AmberBolt, Scale: 1f);
                 dust.velocity = Vector2.Zero;
             }
 
             spriteScale = MathHelper.Min(spriteScale + 0.3f, 1f);
-            projectile.rotation = projectile.velocity.ToRotation();
+            Projectile.rotation = Projectile.velocity.ToRotation();
 
-            Lighting.AddLight(projectile.Center, Color.Red.ToVector3() * 0.6f);
+            Lighting.AddLight(Projectile.Center, Color.Red.ToVector3() * 0.6f);
         }
 
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            target.immune[projectile.owner] = 2;
+            target.immune[Projectile.owner] = 2;
         }
 
         public override void Kill(int timeLeft)
         {
-            Main.PlaySound(SoundID.Item14, projectile.Center);
+            SoundEngine.PlaySound(SoundID.Item14, Projectile.Center);
 
             int size = 16;
-            Rectangle hitbox = new Rectangle((int)projectile.Center.X - size / 2, (int)projectile.Center.Y - size / 2, size, size);
+            Rectangle hitbox = new Rectangle((int)Projectile.Center.X - size / 2, (int)Projectile.Center.Y - size / 2, size, size);
 
             for (int i = 0; i < Main.maxNPCs; i++)
             {
                 NPC npc = Main.npc[i];
                 if (npc.active && !npc.dontTakeDamage && npc.Hitbox.Intersects(hitbox))
                 {
-                    int hitDirection = Math.Sign(npc.Center.X - projectile.Center.X);
-                    npc.StrikeNPC(projectile.damage / 2, projectile.knockBack / 2, hitDirection);
+                    int hitDirection = Math.Sign(npc.Center.X - Projectile.Center.X);
+                    npc.StrikeNPC(Projectile.damage / 2, Projectile.knockBack / 2, hitDirection);
                 }
             }
 
@@ -87,29 +89,20 @@ namespace VadesContentMod.Projectiles
 
             for (int d = 0; d < 4; d++)
             {
-                Dust dust = Dust.NewDustDirect(hitbox.TopLeft(), hitbox.Width, hitbox.Height, DustID.TopazBolt, Scale: 1.2f);
+                Dust dust = Dust.NewDustDirect(hitbox.TopLeft(), hitbox.Width, hitbox.Height, DustID.AmberBolt, Scale: 1.2f);
                 dust.velocity *= 1.5f;
             }
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(ref Color color)
         {
-            Texture2D texture = Main.projectileTexture[projectile.type];
+            Texture2D texture = (Texture2D)TextureAssets.Projectile[Projectile.type];
 
-            Color color = projectile.GetAlpha(lightColor);
+            color = Projectile.GetAlpha(color);
             Vector2 origin = new Vector2(texture.Width - 12, texture.Height / 2);
-            SpriteEffects spriteEffects = projectile.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipVertically;
+            SpriteEffects spriteEffects = Projectile.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipVertically;
 
-            spriteBatch.Draw(
-                texture,
-                projectile.Center - Main.screenPosition,
-                null,
-                color,
-                projectile.rotation,
-                origin,
-                projectile.scale * spriteScale,
-                spriteEffects,
-                0f);
+            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, color, Projectile.rotation, origin, Projectile.scale * spriteScale, spriteEffects, 0);
 
             return false;
         }
