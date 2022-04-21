@@ -47,7 +47,7 @@ namespace VadesContentMod
             
             OneShothotKey = KeybindLoader.RegisterKeybind(instance, "Destructor Armor One-Shot", "F");
 
-            HerosMod = ModLoader.GetMod("HEROsMod");
+            /*HerosMod = ModLoader.GetMod("HEROsMod");
             if (Main.netMode != NetmodeID.Server)
             {
                 TrailEffect = ModContent.Request<Effect>("Effects/TrailShader").Value;
@@ -65,7 +65,7 @@ namespace VadesContentMod
             SoulsLoaded = ModLoader.GetMod("FargowiltasSouls") != null;
             FargoLoaded = ModLoader.GetMod("Fargowiltas") != null;
             SoALoaded = ModLoader.GetMod("SacredTools") != null;
-            CalValLoaded = ModLoader.GetMod("CalValEX") != null;
+            CalValLoaded = ModLoader.GetMod("CalValEX") != null;*/
 
             DateTime dateTime = DateTime.Now;
             currentDate = dateTime.ToString("dd/MM/yyyy");
@@ -103,7 +103,7 @@ namespace VadesContentMod
                     "How you find the mfer");
             }*/
 
-            if (ModContent.GetInstance<VadeConfig>().DiscordRichPresence)
+            /*if (ModContent.GetInstance<VadeConfig>().DiscordRichPresence)
             {
                 try
                 {
@@ -120,7 +120,7 @@ namespace VadesContentMod
                 {
                     throw new Exception("Something went wrong with Discord Rich Presence...", ex);
                 }
-            }
+            }*/
         }
 
         public override void HandlePacket(BinaryReader reader, int whoAmI)
@@ -167,16 +167,6 @@ namespace VadesContentMod
         }
         public override void AddRecipes()
         {
-            Mod calamityMod = ModLoader.GetMod("CalamityMod");
-            //Irradiated
-            ModRecipe recipe = new ModRecipe(this);
-            recipe = new ModRecipe(this);
-            //Æ: Walls to block example
-            recipe = new ModRecipe(this);
-            //recipe.AddIngredient(ModContent.ItemType<Whatever wall we got ecks dee>(), 4);
-            recipe.AddTile(TileID.WorkBenches);
-            //recipe.SetResult(ModContent.ItemType <Whatever block we want ecks dee>());
-            recipe.AddRecipe();
         }
         
         public void SetupHerosMod()

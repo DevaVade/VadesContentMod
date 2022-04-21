@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameInput;
 using Terraria.Graphics.Effects;
@@ -9,7 +10,7 @@ using VadesContentMod.Projectiles;
 
 namespace VadesContentMod
 {
-    public class VadPlayer : ModPlayer
+    public class VadePlayer : ModPlayer
     {
         private int MaxFreeze = -1;
         private float oldMusicFade = 0f;
@@ -45,6 +46,12 @@ namespace VadesContentMod
         public bool godSet;
         public bool sus;
 
+        //Pet bools
+        public bool lmao_we_got_nothing_yet;
+
+        public override void Initialize()
+        {
+        }
         public override void ResetEffects()
         {
             reviveBuff = false;
@@ -133,27 +140,16 @@ namespace VadesContentMod
                     }
                 }
 
-                // Freeze NPCs
-                for (int i = 0; i < Main.maxNPCs; i++)
-                {
-                    NPC npc = Main.npc[i];
-                    /*if (npc.active && !npc.HasBuff(ModContent.BuffType<TimeFrozen>()))
-                    {
-
-                        npc.AddBuff(ModContent.BuffType<TimeFrozen>(), freezeLength);
-                    }*/
-                }
-
                 // Freeze projectiles
                 for (int i = 0; i < Main.maxProjectiles; i++)
                 {
                     Projectile p = Main.projectile[i];
                     if (p.active && !(p.minion && !ProjectileID.Sets.MinionShot[p.type]))
                     {
-                        var globalProj = p.GetGlobalProjectile<VadGlobalProjectile>();
+                        /*var globalProj = p.GetGlobalProjectile<VadeGlobalProjectile>();
 
                         if (!globalProj.TimeFreezeImmune && globalProj.TimeFrozen == 0)
-                            globalProj.TimeFrozen = freezeLength;
+                            globalProj.TimeFrozen = freezeLength;*/
                     }
                 }
 
@@ -170,12 +166,12 @@ namespace VadesContentMod
                     freezeLength = 180;
                     MaxFreeze = -1;
 
-                    /*for (int i = 0; i < Main.maxNPCHitSounds; i++)
+                    for (int i = 0; i < 200; i++)
                     {
                         NPC npc = Main.npc[i];
                         if (npc.active && !npc.dontTakeDamage && npc.life == 1 && npc.lifeMax > 1)
                             npc.StrikeNPC(9999, 0f, 0);
-                    }*/
+                    }
                 }
             }
 
@@ -335,7 +331,7 @@ namespace VadesContentMod
         {
             if (Player != Main.LocalPlayer) return;
 
-            for (int i = Player.CountBuffs() - ModContent.GetInstance<VadeConfig>().ExtraPlayerBuff; i > 0; i--)
+            for (int i = Player.CountBuffs(); i > 0; i--)
             {
                 int num = -1;
                 for (int j = 0; j < Player.MaxBuffs; j++)
@@ -356,11 +352,7 @@ namespace VadesContentMod
         {
             if (!oneShotCooldown && destructorSet && VadesContentMod.OneShothotKey.JustPressed)
             {
-                oneShot = oneShotCooldown = true;
-                Player.AddBuff(ModContent.BuffType<OneShot>(), 1900);
-                Player.AddBuff(ModContent.BuffType<OneShotCooldown>(), 7200);
-
-                Main.PlaySound(SoundID.NPCDeath56);
+                SoundEngine.PlaySound(SoundID.NPCDeath56);
 
                 for (int d = 0; d < 30; d++)
                 {
@@ -370,7 +362,7 @@ namespace VadesContentMod
 
                 for (int d = 0; d < 10; d++)
                 {
-                    Dust.NewDust(Player.Center, 5, 5, DustID.TopazBolt);
+                    Dust.NewDust(Player.Center, 5, 5, DustID.AmberBolt);
                 }
             }
         }
@@ -391,7 +383,7 @@ namespace VadesContentMod
         {
             if (!reviveCooldown && destructorSet)
             {
-                Main.PlaySound(SoundID.NPCDeath56);
+                SoundEngine.PlaySound(SoundID.NPCDeath56);
 
                 int heal = Player.statLifeMax2;
 
@@ -402,10 +394,6 @@ namespace VadesContentMod
                 {
                     Player.statLife = Player.statLifeMax2;
                 }
-
-                Player.AddBuff(ModContent.BuffType<ReviveCooldown>(), 2400, true);
-                Player.AddBuff(ModContent.BuffType<ReviveBuff>(), 600, true);
-
                 return false;
             }
 
